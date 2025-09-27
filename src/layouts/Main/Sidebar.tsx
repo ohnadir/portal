@@ -85,6 +85,14 @@ const Sidebar: React.FC<ISidebarProps> = ({ setNavigationName }) => {
                 }
             </Menu>
 
+            <div className="bg-[#F4F4F4] p-3 rounded-[16px]">
+                <h1 className="text-[#080808]">Today's Real rate</h1>
+                <p>Updated In: {new Date().toString()}</p>
+                <div className="bg-white rounded-[90px] h-10 ">
+                    <p className="">R.1 = ৳25</p>
+                </div>
+            </div>
+
             <div
                 onClick={handleLogOut}
                 className="flex text-[#415D71] items-center gap-3 cursor-pointer px-6 hover:bg-gray-200 py-2 mx-2 rounded-lg transition-all"
