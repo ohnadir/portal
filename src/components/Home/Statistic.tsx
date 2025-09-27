@@ -23,7 +23,7 @@ const Statistic: React.FC = () => {
                             </UsersRound>
                         }
                     />
-                    <div className='flex items-center justify-between mt-[19px]'>
+                    <div className='flex items-center justify-between mt-[15px]'>
                         <div className='flex items-center gap-2'>
                             <p className='text-[#606060]'>Total:</p>
                             <p className='text-[24px] font-medium'>10000</p>
@@ -53,7 +53,7 @@ const Statistic: React.FC = () => {
                             </CircleDollarSign>
                         }
                     />
-                    <div className='flex items-center justify-between mt-[19px]'>
+                    <div className='flex items-center justify-between mt-[15px]'>
                         <div className='flex items-center gap-2'>
                             <p className='text-[#606060]'>Today</p>
                             <p className='text-[24px] font-medium'>10000</p>
@@ -83,7 +83,7 @@ const Statistic: React.FC = () => {
                             </BanknoteArrowUp>
                         }
                     />
-                    <div className='flex items-center justify-between mt-[19px]' >
+                    <div className='flex items-center justify-between mt-[15px]' >
                         <div className='flex items-center gap-2'>
                             <p className='text-[#606060]'>Today:</p>
                             <p className='text-[24px] font-medium'>10000</p>
@@ -115,7 +115,7 @@ const Statistic: React.FC = () => {
                             </Info>
                         }
                     />
-                    <div className='flex items-center justify-between mt-[19px]'>
+                    <div className='flex items-center justify-between mt-[15px]'>
                         <div className='flex items-center gap-2'>
                             <p className='text-[#606060]'>Today:</p>
                             <p className='text-[24px] text-red-700 font-medium'>- 10000</p>

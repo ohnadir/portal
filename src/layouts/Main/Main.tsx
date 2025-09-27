@@ -20,7 +20,7 @@ const Main: React.FC = () => {
             </div>
             <div className="col-span-10 w-full  text-black rounded-md">
                 <Header navigationName ={navigationName } />
-                <div className="h-[calc(100vh-80px)] overflow-y-auto mt-3">
+                <div className="h-[calc(100vh-80px)] overflow-y-auto mt-3 pr-3">
                     <Outlet />
                 </div>
             </div>

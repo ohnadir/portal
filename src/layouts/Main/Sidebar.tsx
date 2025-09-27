@@ -14,7 +14,7 @@ const Sidebar: React.FC<ISidebarProps> = ({ setNavigationName }) => {
     const menuItems = [
         {
             id: 1,
-            title: "Analaytics",
+            title: "Analytics",
             icon: <ChartPie size={24} />,
             path: "/"
         },
