@@ -1,5 +1,6 @@
-import { Form, Input, Modal, Switch } from 'antd';
 import React from 'react';
+import { Form, Input, Modal, Switch, type FormProps } from 'antd';
+import { useAddClientMutation } from "../../redux/apiSlices/clientSlice";
 
 interface IClientModalProps {
     open: boolean;
@@ -7,9 +8,17 @@ interface IClientModalProps {
 }
 
 const ClientModal: React.FC<IClientModalProps> = ({ open, setOpen }) => {
-    const onChange = (checked: boolean) => {
-        console.log(`switch to ${checked}`);
+
+    const [addClient] = useAddClientMutation();
+    const [form] = Form.useForm();
+
+    const onFinish: FormProps["onFinish"] = async (values) => {
+        await addClient(values).unwrap().then(() => {
+            form.resetFields();
+            setOpen(false)
+        })
     };
+
     return (
         <div>
             <Modal
@@ -20,47 +29,89 @@ const ClientModal: React.FC<IClientModalProps> = ({ open, setOpen }) => {
                 onCancel={() => setOpen(false)}
                 footer={false}
             >
-                <Form style={{ marginTop: 20 }} layout="vertical" className="grid grid-cols-12 gap-4">
-                    <Form.Item className="col-span-6" style={{ marginBottom: 0 }} label="Username" name="username">
-                        <Input placeholder='Enter username' style={{ borderRadius: 90, height: 44, border: "1px solid #E0E0E0" }} />
+                <Form form={form} onFinish={onFinish} style={{ marginTop: 20 }} layout="vertical" className="grid grid-cols-12 gap-4">
+                    <Form.Item
+                        className="col-span-6"
+                        style={{ marginBottom: 0 }}
+                        label="Username"
+                        name="name"
+                        rules={[{ required: true, message: "Please input your username!" }]}
+                    >
+                        <Input
+                            placeholder='Enter username'
+                            style={{ borderRadius: 90, height: 44, border: "1px solid #E0E0E0" }}
+                        />
                     </Form.Item>
-                    <Form.Item className="col-span-6" style={{ marginBottom: 0 }} label="Email" name="email">
+
+                    <Form.Item
+                        className="col-span-6"
+                        style={{ marginBottom: 0 }}
+                        label="Email"
+                        name="email"
+                        rules={[{ required: true, message: "Please input your email!" }]}
+                    >
                         <Input placeholder='Enter email' style={{ borderRadius: 90, height: 44, border: "1px solid #E0E0E0" }} />
                     </Form.Item>
 
-                    <Form.Item className="col-span-6" style={{ marginBottom: 0 }} label="Address" name="address">
+                    <Form.Item className="col-span-6" style={{ marginBottom: 0 }} label="Address" name="address" rules={[{ required: true, message: "Please input your address!" }]}>
                         <Input placeholder='Enter Address' style={{ borderRadius: 90, height: 44, border: "1px solid #E0E0E0" }} />
                     </Form.Item>
-                    <Form.Item className="col-span-6" style={{ marginBottom: 0 }} label="Contact No." name="contact_number">
+                    <Form.Item className="col-span-6" style={{ marginBottom: 0 }} label="Contact No." name="contact" rules={[{ required: true, message: "Please input your contact!" }]}>
                         <Input placeholder='Enter Contact No.' style={{ borderRadius: 90, height: 44, border: "1px solid #E0E0E0" }} />
                     </Form.Item>
 
-                    <Form.Item className="col-span-12" style={{ marginBottom: 0 }} label="Details/Note" name="details">
+                    <Form.Item className="col-span-12" style={{ marginBottom: 0 }} label="Details/Note" name="notes">
                         <Input.TextArea placeholder='Enter Details' style={{ borderRadius: 14, height: 110, border: "1px solid #E0E0E0" }} />
                     </Form.Item>
 
-                    <Form.Item className="col-span-6" style={{ marginBottom: 0 }} label="Password" name="password">
-                        <Input.Password placeholder='Enter Client password' style={{ borderRadius: 90, height: 44, border: "1px solid #E0E0E0" }} />
+                    <Form.Item
+                        className="col-span-6"
+                        style={{ marginBottom: 0 }}
+                        label="Password"
+                        name="password"
+                        rules={[{ required: true, message: "Please input your password!" }]}
+                        hasFeedback
+                    >
+                        <Input.Password
+                            placeholder='Enter Client password'
+                            style={{ borderRadius: 90, height: 44, border: "1px solid #E0E0E0" }}
+                        />
                     </Form.Item>
-                    <Form.Item className="col-span-6" style={{ marginBottom: 0 }} label="Confirm Password" name="confirm_password">
+
+                    <Form.Item
+                        className="col-span-6"
+                        style={{ marginBottom: 0 }}
+                        label="Confirm Password"
+                        name="confirm_password"
+                        rules={[{ required: true, message: "Please input your confirm password!" }, ({ getFieldValue }) => ({
+                            validator(_, value) {
+                                if (!value || getFieldValue('password') === value) {
+                                    return Promise.resolve();
+                                }
+                                return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                            },
+                        })]}
+                        hasFeedback
+                    >
                         <Input.Password placeholder='Enter Client confirm password' style={{ borderRadius: 90, height: 44, border: "1px solid #E0E0E0" }} />
                     </Form.Item>
 
                     <div className="col-span-12 h-[1px] bg-[#E0E0E0] my-2"></div>
 
-                    <Form.Item
-                        className="col-span-12"
-                        style={{ marginBottom: 0 }}
-                        name="status"
-                        valuePropName="checked"
-                    >
-                        <div className="flex items-center gap-2">
-                            <Switch defaultChecked onChange={onChange} />
-                            <p className="text-[#7F7F7F]">
-                                <span className="font-bold text-black">Active</span> (kindly confirm your client activity)
-                            </p>
-                        </div>
-                    </Form.Item>
+                    <div className="col-span-12 flex items-center gap-2">
+                        <Form.Item
+                            name="status"
+                            valuePropName="checked"
+                            noStyle
+                        >
+                            <Switch defaultChecked />
+                        </Form.Item>
+
+                        <p className="text-[#7F7F7F]">
+                            <span className="font-bold text-black">Active</span> (kindly confirm your client activity)
+                        </p>
+                    </div>
+
 
 
                     <div className="col-span-12 flex justify-center">

@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Summary from '../../components/Credit/Summary';
 import CreditTable from '../../components/Credit/CreditTable';
 
 const Credits: React.FC = () => {
-    const [page, setPage] = useState(0)
     return (
         <React.Fragment>
             <Summary/>
-            <CreditTable page={page} setPage={setPage}/>
+            <CreditTable/>
         </React.Fragment>
     );
 };
