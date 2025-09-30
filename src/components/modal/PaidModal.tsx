@@ -10,9 +10,9 @@ interface IPaidModalProps {
 }
 
 const PaidModal: React.FC<IPaidModalProps> = ({ open, setOpen, refetch }) => {
-
+""
     const [form] = Form.useForm();
-    const [addCredit] = useAddCreditMutation();
+    const [addDebit] = useAddDebitMutation();
 
     const onFinish: FormProps["onFinish"] = async (values) => {
         await addCredit({id: open?._id, body: values}).unwrap().then(() => {
