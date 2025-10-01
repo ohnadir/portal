@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import statistic from "antd/es/statistic";
 import { api } from "../api/baseApi";
 
 const transactionSlice = api.injectEndpoints({

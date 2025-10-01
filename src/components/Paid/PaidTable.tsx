@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import PaidFilterOptions from './PaidFilterOptions';
 import { useClientsQuery } from '../../redux/apiSlices/clientSlice';
 import type { RowSelectionType } from 'antd/es/table/interface';
-import { Info } from 'lucide-react';
 import PaidModal from '../modal/PaidModal';
 
 interface IPaidTableProps {
@@ -24,10 +23,10 @@ interface IClientProps {
 
 const PaidTable: React.FC<IPaidTableProps> = ({ summaryRefetch}) => {
     const [page, setPage] = useState(1)
-    const [selectionType, setSelectionType] = useState<RowSelectionType>('checkbox');
+    const [selectionType, _setSelectionType] = useState<RowSelectionType>('checkbox');
         const [open, setOpen] = useState<IClientProps | null>(null);
     
-        const { data: clients, isLoading, refetch } = useClientsQuery(undefined);
+        const { data: clients, refetch } = useClientsQuery(undefined);
         const rowSelection = {
             onChange: (selectedRowKeys: React.Key[], selectedRows: IClientProps[]) => {
                 console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);

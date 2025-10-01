@@ -4,7 +4,6 @@ import React, { useState } from 'react'
 import FilterOptions from './FilterOptions';
 import type { RowSelectionType } from 'antd/es/table/interface';
 import { useClientsQuery } from '../../redux/apiSlices/clientSlice';
-import { Info } from 'lucide-react';
 import Logo from "../../assets/logo.png";
 import CreditModal from '../modal/CreditModal';
 
@@ -27,7 +26,7 @@ interface ICreditTableProps {
 
 const CreditTable: React.FC<ICreditTableProps> = ({summaryRefetch}) => {
     const [page, setPage] = useState(1);
-    const [selectionType, setSelectionType] = useState<RowSelectionType>('checkbox');
+    const [selectionType, _setSelectionType] = useState<RowSelectionType>('checkbox');
     const [open, setOpen] = useState<ICreditProps | null>(null);
 
     const { data: clients, isLoading, refetch } = useClientsQuery(undefined);
