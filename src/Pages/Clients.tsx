@@ -26,11 +26,16 @@ interface IClientProps {
 
 const Clients: React.FC = () => {
     const [page, setPage] = useState(1);
+    const [clientStatus, setClientStatus] = useState<"active" | "inactive" | undefined>(undefined);
+    const [search , setSearch] = useState<string | undefined>("");
     const [selectionType, _setSelectionType] = useState<RowSelectionType>('checkbox');
     const [open, setOpen] = useState(false);
     const [status] = useStatusMutation();
 
-    const { data: clients, isLoading, refetch } = useClientsQuery(undefined);
+    const { data: clients, isLoading, refetch } = useClientsQuery({page, search, status: clientStatus});
+    console.log(clients);
+
+
     const rowSelection = {
         onChange: (selectedRowKeys: React.Key[], selectedRows: IClientProps[]) => {
             console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
@@ -128,6 +133,7 @@ const Clients: React.FC = () => {
                                 <Input
                                     style={{ width: "335px", paddingLeft: 5, height: 44, borderRadius: 60, background: "white" }}
                                     placeholder="Search"
+                                    onChange={(e) => setSearch(e.target.value)}
                                     prefix={
                                         <div className='w-[36px] h-[36px] rounded-full bg-[#F1F1F1] flex items-center justify-center'>
                                             <Search
@@ -161,48 +167,11 @@ const Clients: React.FC = () => {
                                                 colorPrimary: 'white',
                                             },
                                         },
-                                        token: {
-                                            // colorPrimary: "white"
-                                        },
                                     }}
                                 >
-                                    <Select placeholder="View All" style={{ width: 130, height: 44, marginBottom: 0 }} >
-                                        <Select.Option value="2025">2025</Select.Option>
-                                        <Select.Option value="2024">2024</Select.Option>
-                                        <Select.Option value="2023">2023</Select.Option>
-                                        <Select.Option value="2022">2022</Select.Option>
-                                        <Select.Option value="2021">2021</Select.Option>
-                                    </Select>
-                                </ConfigProvider>
-
-                                <ConfigProvider
-                                    theme={{
-                                        components: {
-                                            Select: {
-                                                colorBgBase: "#F1F1F1",
-                                                colorBgContainer: "#F1F1F1",
-                                                borderRadius: 24,
-                                                activeBorderColor: "none",
-                                                activeOutlineColor: "none",
-                                                hoverBorderColor: "none"
-                                            },
-                                            Pagination: {
-                                                itemActiveBg: '#2375D0',
-                                                borderRadius: 100,
-                                                colorPrimary: 'white',
-                                            },
-                                        },
-                                        token: {
-                                            // colorPrimary: "white"
-                                        },
-                                    }}
-                                >
-                                    <Select placeholder="View All" style={{ width: 130, background: "white", height: 44, marginBottom: 0 }} >
-                                        <Select.Option value="2025">2025</Select.Option>
-                                        <Select.Option value="2024">2024</Select.Option>
-                                        <Select.Option value="2023">2023</Select.Option>
-                                        <Select.Option value="2022">2022</Select.Option>
-                                        <Select.Option value="2021">2021</Select.Option>
+                                    <Select onChange={(value) => setClientStatus(value)} placeholder="Active" style={{ width: 130, height: 44, marginBottom: 0 }} >
+                                        <Select.Option value="active">Active</Select.Option>
+                                        <Select.Option value="inactive">Inactive</Select.Option>
                                     </Select>
                                 </ConfigProvider>
 

@@ -1,7 +1,10 @@
 import { Input, Table } from 'antd';
-import { Search } from 'lucide-react';
+import { FileText, PencilLine, Search, Trash2 } from 'lucide-react';
 import moment from 'moment';
-import React from 'react';
+import React, { useState } from 'react';
+import { useDeleteTransactionMutation } from '../../redux/apiSlices/transactionSlice';
+import UpdateTransactionModal from '../modal/UpdateTransactionModal';
+import Swal from 'sweetalert2';
 
 
 interface ITransactionProps {
@@ -22,8 +25,37 @@ interface IPaginationProps {
     totalPage: number;
 }
 
-const TransactionTable: React.FC<{ transactions: ITransactionProps[]; pagination: IPaginationProps }> = ({ transactions, pagination }) => {
-    console.log(pagination);
+const TransactionTable: React.FC<{ transactions: ITransactionProps[]; pagination: IPaginationProps, refetch: () => void }> = ({ transactions, refetch }) => {
+    const [open, setOpen] = useState<ITransactionProps | null>(null);
+    const [deleteTransaction] = useDeleteTransactionMutation();
+
+    const handleDeleteTransaction = async (id: string) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes"
+        }).then(async (result: any) => {
+            if (result.isConfirmed) {
+                await deleteTransaction(id).unwrap().then(() => {
+                    setOpen(null);
+                    refetch();
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "Your transaction has been deleted.",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                })
+
+            }
+        });
+
+    };
 
     const columns = [
         {
@@ -42,7 +74,7 @@ const TransactionTable: React.FC<{ transactions: ITransactionProps[]; pagination
             dataIndex: "date",
             key: "date",
             render: (_: string, value: ITransactionProps) => (
-                <span>{moment(value?.createdAt ).format("l")}</span>
+                <span>{moment(value?.createdAt).format("l")}</span>
             ),
         },
         {
@@ -69,11 +101,23 @@ const TransactionTable: React.FC<{ transactions: ITransactionProps[]; pagination
                 <span className="text-blue-500">{value?.balance}</span>
             ),
         },
+        {
+            title: 'Actions',
+            dataIndex: 'actions',
+            key: 'actions',
+            render: (_: string, _record: ITransactionProps) =>
+                <div className='flex items-center gap-3'>
+                    <PencilLine size={20} className='cursor-pointer' onClick={() => setOpen(_record)} />
+                    <Trash2 className='cursor-pointer' size={20} color='red' onClick={() => handleDeleteTransaction(_record._id)} />
+                </div>
+        },
     ];
 
     return (
         <div>
             <div className='flex items-center justify-end gap-4 mb-3'>
+                <p>Transaction summary need to add here</p>
+                <FileText size={20} color='blue' />
                 <Input
                     style={{ width: "335px", paddingLeft: 5, height: 44, borderRadius: 60, background: "white" }}
                     placeholder="Search"
@@ -112,6 +156,7 @@ const TransactionTable: React.FC<{ transactions: ITransactionProps[]; pagination
                 bordered
                 className="shadow-md"
             />
+            <UpdateTransactionModal open={open} setOpen={setOpen} refetch={refetch} />
         </div>
     );
 };

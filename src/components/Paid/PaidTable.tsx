@@ -1,9 +1,11 @@
-import { ConfigProvider, Table, type TableColumnsType } from 'antd'
+import { ConfigProvider, Input, Select, Table, type TableColumnsType } from 'antd'
 import React, { useState } from 'react'
 import PaidFilterOptions from './PaidFilterOptions';
 import { useClientsQuery } from '../../redux/apiSlices/clientSlice';
 import type { RowSelectionType } from 'antd/es/table/interface';
 import PaidModal from '../modal/PaidModal';
+import CreditModal from '../modal/CreditModal';
+import { Search } from 'lucide-react';
 
 interface IPaidTableProps {
     summaryRefetch: () => void;
@@ -21,85 +23,138 @@ interface IClientProps {
     status: "active" | "inactive"
 }
 
-const PaidTable: React.FC<IPaidTableProps> = ({ summaryRefetch}) => {
+const PaidTable: React.FC<IPaidTableProps> = ({ summaryRefetch }) => {
     const [page, setPage] = useState(1)
     const [selectionType, _setSelectionType] = useState<RowSelectionType>('checkbox');
-        const [open, setOpen] = useState<IClientProps | null>(null);
-    
-        const { data: clients, refetch } = useClientsQuery(undefined);
-        const rowSelection = {
-            onChange: (selectedRowKeys: React.Key[], selectedRows: IClientProps[]) => {
-                console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-            },
-            getCheckboxProps: (record: IClientProps) => ({
-                disabled: record.name === 'Disabled User',
-                name: record.name,
-            }),
-        };
-    
-        const columns: TableColumnsType<IClientProps> = [
-            {
-                title: 'S.No.',
-                dataIndex: 'name',
-                key: 'name',
-                render: (_: string, _record: IClientProps, index: number) => <p>#{index + 1}</p>,
-            },
-            {
-                title: 'User Id',
-                dataIndex: 'userId',
-                key: 'userId',
-            },
-            {
-                title: 'Client',
-                dataIndex: 'client',
-                key: 'client',
-                render: (_: string, _record: IClientProps) => <div className='flex items-center gap-2'>
-                    <img width={35} height={35} src={_record.profile} alt="" />
-                    <p>{_record.name}</p>
+    const [open, setOpen] = useState<IClientProps | null>(null);
+    const [creditOpen, setCreditOpen] = useState<IClientProps | null>(null);
+    const [clientStatus, setClientStatus] = useState<"active" | "inactive" | undefined>(undefined);
+    const [search, setSearch] = useState<string | undefined>("");
+
+    const { data: clients, refetch } = useClientsQuery({ page, search, status: clientStatus });
+    const rowSelection = {
+        onChange: (selectedRowKeys: React.Key[], selectedRows: IClientProps[]) => {
+            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+        },
+        getCheckboxProps: (record: IClientProps) => ({
+            disabled: record.name === 'Disabled User',
+            name: record.name,
+        }),
+    };
+
+    const columns: TableColumnsType<IClientProps> = [
+        {
+            title: 'S.No.',
+            dataIndex: 'name',
+            key: 'name',
+            render: (_: string, _record: IClientProps, index: number) => <p>#{index + 1}</p>,
+        },
+        {
+            title: 'User Id',
+            dataIndex: 'userId',
+            key: 'userId',
+        },
+        {
+            title: 'Client',
+            dataIndex: 'client',
+            key: 'client',
+            render: (_: string, _record: IClientProps) => <div className='flex items-center gap-2'>
+                <img width={35} height={35} src={_record.profile} alt="" />
+                <p>{_record.name}</p>
+            </div>
+        },
+        {
+            title: 'Address',
+            dataIndex: 'address',
+            key: 'address',
+        },
+        {
+            title: 'Contact',
+            dataIndex: 'contact',
+            key: 'contact',
+        },
+        {
+            title: 'Credit',
+            dataIndex: 'totalCredit',
+            key: 'totalCredit',
+        },
+        {
+            title: 'Paid',
+            dataIndex: 'totalPaid',
+            key: 'totalPaid'
+        },
+        {
+            title: 'Balance',
+            dataIndex: 'balance',
+            key: 'balance',
+            render: (_: string, _record: IClientProps) => <p>{Number(_record.totalCredit) - Number(_record.totalPaid)}</p>,
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status'
+        },
+        {
+            title: 'Actions',
+            dataIndex: 'actions',
+            key: 'actions',
+            render: (_: string, _record: IClientProps) =>
+                <div className='flex items-center gap-3'>
+                    <button onClick={() => setCreditOpen(_record)} className='cursor-pointer bg-[#F57674] text-white px-3 py-1 rounded-[16px]'>Add Credit</button>
+                    <button onClick={() => setOpen(_record)} className='cursor-pointer bg-[#F57674] text-white px-3 py-1 rounded-[16px]'>Add Paid</button>
                 </div>
-            },
-            {
-                title: 'Address',
-                dataIndex: 'address',
-                key: 'address',
-            },
-            {
-                title: 'Address',
-                dataIndex: 'address',
-                key: 'address',
-            },
-            {
-                title: 'Credit',
-                dataIndex: 'totalCredit',
-                key: 'totalCredit',
-            },
-            {
-                title: 'Paid',
-                dataIndex: 'totalPaid',
-                key: 'totalPaid'
-            },
-            {
-                title: 'Balance',
-                dataIndex: 'balance',
-                key: 'balance',
-                render: (_: string, _record: IClientProps) => <p>{Number(_record.totalCredit) - Number(_record.totalPaid)}</p>,
-            },
-            {
-                title: 'Status',
-                dataIndex: 'status',
-                key: 'status'
-            },
-            {
-                title: 'Actions',
-                dataIndex: 'actions',
-                key: 'actions',
-                render: (_: string, _record: IClientProps) => <button onClick={() => setOpen(_record)} className='cursor-pointer bg-[#F57674] text-white px-3 py-1 rounded-[16px]'>Add Paid</button>
-            },
-        ];
+        },
+    ];
 
     return (
         <div className='rounded-[16px] bg-white p-3 mt-3' style={{ boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.16)" }}>
-            <PaidFilterOptions setPage={setPage} />
+            <div className='flex items-center justify-end gap-3 mb-3'>
+                <Input
+                    style={{ width: "335px", paddingLeft: 5, height: 44, borderRadius: 60, background: "white" }}
+                    placeholder="Search"
+                    onChange={(e) => setSearch(e.target.value)}
+                    prefix={
+                        <div className='w-[36px] h-[36px] rounded-full bg-[#F1F1F1] flex items-center justify-center'>
+                            <Search
+                                size={24}
+                                stroke="url(#grad)"
+                            >
+                                <defs>
+                                    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" stopColor="#0058D4" />
+                                        <stop offset="100%" stopColor="#3D8CFF" />
+                                    </linearGradient>
+                                </defs>
+                            </Search>
+                        </div>
+                    }
+                />
+                <ConfigProvider
+                    theme={{
+                        components: {
+                            Select: {
+                                colorBgBase: "#F1F1F1",
+                                colorBgContainer: "#F1F1F1",
+                                borderRadius: 24,
+                                activeBorderColor: "none",
+                                activeOutlineColor: "none",
+                                hoverBorderColor: "none"
+                            },
+                            Pagination: {
+                                itemActiveBg: '#2375D0',
+                                borderRadius: 100,
+                                colorPrimary: 'white',
+                            },
+                        },
+                    }}
+                >
+                    <Select onChange={(value) => setClientStatus(value)} placeholder="Active" style={{ width: 130, height: 44, marginBottom: 0 }} >
+                        <Select.Option value="active">Active</Select.Option>
+                        <Select.Option value="inactive">Inactive</Select.Option>
+                    </Select>
+                </ConfigProvider>
+            </div>
+
             <ConfigProvider
                 theme={{
                     components: {
@@ -124,7 +179,8 @@ const PaidTable: React.FC<IPaidTableProps> = ({ summaryRefetch}) => {
                     }}
                 />
             </ConfigProvider>
-             <PaidModal summaryRefetch={summaryRefetch} open={open} setOpen={setOpen} refetch={refetch} />
+            <PaidModal summaryRefetch={summaryRefetch} open={open} setOpen={setOpen} refetch={refetch} />
+            <CreditModal summaryRefetch={summaryRefetch} open={creditOpen} setOpen={setCreditOpen} refetch={refetch} />
         </div>
     )
 }

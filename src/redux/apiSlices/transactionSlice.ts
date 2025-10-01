@@ -13,6 +13,26 @@ const transactionSlice = api.injectEndpoints({
                 }
             }
         }),
+        deleteTransaction: builder.mutation({
+            query: (id: string) => {
+                return {
+                    method: "DELETE",
+                    url: `/transaction/${id}`
+                }
+            }
+        }),
+        updateTransaction: builder.mutation({
+            query: ({id, body}: {id: string, body: any}) => {
+                return {
+                    method: "POST",
+                    url: `/transaction/${id}`,
+                    body: body
+                }
+            },
+            transformResponse: (response: any) => {
+                return response.data;
+            }
+        }),
         addDebit: builder.mutation({
             query: ({id, body}: {id: string, body: any}) => {
                 return {
@@ -54,5 +74,7 @@ export const {
     useAddCreditMutation,
     useAddDebitMutation,
     useSummaryQuery,
-    useTransactionStatisticQuery
+    useTransactionStatisticQuery,
+    useDeleteTransactionMutation,
+    useUpdateTransactionMutation,
 } = transactionSlice;

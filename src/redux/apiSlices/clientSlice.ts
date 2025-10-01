@@ -13,10 +13,14 @@ const clientSlice = api.injectEndpoints({
             }
         }),
         clients: builder.query({
-            query: () => {
+            query: ({page, search, status}: {page?: number, search?: string, status?: "active" | "inactive"}) => {
+                const params = new URLSearchParams()
+                if (page) params.append("page", page.toString())
+                if (search) params.append("searchTerm", search)
+                if (status) params.append("status", status)
                 return {
                     method: "GET",
-                    url: "/client"
+                    url: `/client?${params.toString()}`,
                 }
             },
             transformResponse: (response: any) => {

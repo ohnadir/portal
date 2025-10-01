@@ -11,7 +11,7 @@ import moment from "moment";
 const ClientDetails: React.FC = () => {
     const {id} = useParams();
     const [status, setStatus] = useState(true);
-    const {data: clientDetails} = useClientDetailsQuery(id);
+    const {data: clientDetails, refetch} = useClientDetailsQuery(id);
     return (
         <div className="">
 
@@ -88,7 +88,7 @@ const ClientDetails: React.FC = () => {
 
             {/* Table Section */}
             <div className="bg-white rounded-[16px] p-6" style={{ boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.16)" }}>
-                <TransactionTable  pagination={clientDetails?.pagination} transactions={clientDetails?.transactions}  />
+                <TransactionTable refetch={refetch}  pagination={clientDetails?.pagination} transactions={clientDetails?.transactions}  />
             </div>
         </div>
     );
