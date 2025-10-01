@@ -8,7 +8,7 @@ interface ICreditTableProps {
 
 const CreditTable: React.FC<ICreditTableProps> = ({ page, setPage }) => {
 
-    const [selectionType, setSelectionType] = useState<'checkbox' | 'radio'>('checkbox');
+    const [selectionType, _setSelectionType] = useState<'checkbox' | 'radio'>('checkbox');
 
     const rowSelection = {
         onChange: (selectedRowKeys: number[], selectedRows: string[]) => {
@@ -26,7 +26,7 @@ const CreditTable: React.FC<ICreditTableProps> = ({ page, setPage }) => {
             title: 'S.No.',
             dataIndex: 'name',
             key: 'name',
-            render: (_:number, record:string, index:number) => <p>{(page - 1) * 10 + index + 1}</p>,
+            render: (_:number, _record:string, index:number) => <p>{(page - 1) * 10 + index + 1}</p>,
         },
         {
             title: 'Company Name',
@@ -52,10 +52,10 @@ const CreditTable: React.FC<ICreditTableProps> = ({ page, setPage }) => {
             title: 'Actions',
             dataIndex: 'actions',
             key: 'actions',
-            render: (_:number, record:string) => (
+            render: (_:number, _record:string) => (
                 <div className=" flex items-center gap-4">
                     <p>
-                        Add credit {record}
+                        Add credit {_record}
                     </p>
                 </div>
             ),
