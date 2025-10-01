@@ -4,7 +4,6 @@ import Home from "../Pages/Home";
 import Clients from "../Pages/Clients";
 import Credits from "../Pages/Credits";
 import Paid from "../Pages/Paid";
-import Ledger from "../Pages/Ledger";
 import Account from "../Pages/Account";
 import ClientDetails from "../Pages/ClientDetails";
 import Auth from "../layouts/Auth/Auth";
@@ -31,10 +30,6 @@ const router = createBrowserRouter([
             {
                 path: "/payment-paid",
                 element: <Paid/>
-            },
-            {
-                path: "/ledger",
-                element: <Ledger/>
             },
             {
                 path: "/account-settings",

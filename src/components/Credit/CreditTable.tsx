@@ -35,8 +35,8 @@ const CreditTable: React.FC<ICreditTableProps> = ({summaryRefetch}) => {
             console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
         },
         getCheckboxProps: (record: ICreditProps) => ({
-            disabled: record.name === 'Disabled User',
-            name: record.name,
+            disabled: record?.name === 'Disabled User',
+            name: record?.name,
         }),
     };
 

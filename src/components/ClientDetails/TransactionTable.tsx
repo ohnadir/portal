@@ -23,6 +23,7 @@ interface IPaginationProps {
 }
 
 const TransactionTable: React.FC<{ transactions: ITransactionProps[]; pagination: IPaginationProps }> = ({ transactions, pagination }) => {
+    console.log(pagination);
 
     const columns = [
         {

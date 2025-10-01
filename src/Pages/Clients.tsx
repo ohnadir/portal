@@ -59,13 +59,13 @@ const Clients: React.FC = () => {
             title: 'User ID',
             dataIndex: 'userId',
             key: 'userId',
-            render: (_: string, _record: IClientProps, index: number) => <p>#{_record.userId}</p>,
+            render: (_: string, _record: IClientProps, _index: number) => <p>#{_record.userId}</p>,
         },
         {
             title: 'Client',
             dataIndex: 'client',
             key: 'client',
-            render: (_: string, _record: IClientProps, index: number) => <div className='flex items-center gap-2'>
+            render: (_: string, _record: IClientProps, _index: number) => <div className='flex items-center gap-2'>
                 <img width={35} height={35} src={_record.profile} alt="" />
                 <p>{_record.name}</p>
             </div>

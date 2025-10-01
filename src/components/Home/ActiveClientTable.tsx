@@ -1,7 +1,7 @@
 import { ConfigProvider, Select, Table, type TableColumnsType } from 'antd';
 import { Info } from 'lucide-react';
 import React from 'react';
-import { useActiveClientsQuery, useClientsQuery } from '../../redux/apiSlices/clientSlice';
+import { useActiveClientsQuery } from '../../redux/apiSlices/clientSlice';
 
 interface IClientProps {
     _id: string;

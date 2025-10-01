@@ -1,5 +1,5 @@
 import { ConfigProvider, Select } from 'antd';
-import React, { type FC } from 'react';
+import React from 'react';
 import { BarChart, Bar, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import { useClientStatisticQuery } from '../../redux/apiSlices/clientSlice';
 
