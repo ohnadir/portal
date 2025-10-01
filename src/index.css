@@ -29,3 +29,7 @@ body {
 .ant-menu-item-active:hover {
   border-radius: 90px !important;
 }
+
+.custom-switch.ant-switch-checked {
+  background: linear-gradient(to right, #0058D4, #3D8CFF) !important;
+}

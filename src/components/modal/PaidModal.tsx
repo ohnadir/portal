@@ -1,24 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Form, Input, Modal, type FormProps } from 'antd';
 import React from 'react';
-import { useAddCreditMutation } from '../../redux/apiSlices/transactionSlice';
+import { useAddDebitMutation } from '../../redux/apiSlices/transactionSlice';
 
 interface IPaidModalProps {
     open: any | null;
     setOpen: (value: any | null) => void;
     refetch: () => void;
+    summaryRefetch: () => void;
 }
 
-const PaidModal: React.FC<IPaidModalProps> = ({ open, setOpen, refetch }) => {
-""
+const PaidModal: React.FC<IPaidModalProps> = ({ open, setOpen, refetch, summaryRefetch }) => {
     const [form] = Form.useForm();
     const [addDebit] = useAddDebitMutation();
 
     const onFinish: FormProps["onFinish"] = async (values) => {
-        await addCredit({id: open?._id, body: values}).unwrap().then(() => {
+        await addDebit({id: open?._id, body: values}).unwrap().then(() => {
             form.resetFields();
-            setOpen(null)
-            refetch()
+            setOpen(null);
+            refetch();
+            summaryRefetch();
         })
     };
 
@@ -26,7 +27,7 @@ const PaidModal: React.FC<IPaidModalProps> = ({ open, setOpen, refetch }) => {
     return (
         <div>
             <Modal
-                title={<p className='text-[#080808] text-[20px] mb-3'>Add Credit</p>}
+                title={<p className='text-[#080808] text-[20px] mb-3'>Add Paid</p>}
                 open={open}
                 width={320}
                 onCancel={() => setOpen(null)}

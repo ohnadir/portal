@@ -1,19 +1,20 @@
 import { createBrowserRouter } from "react-router-dom";
 import Main from "../layouts/Main/Main";
-import Home from "../layouts/pages/Home";
-import Clients from "../layouts/pages/Clients";
-import Credits from "../layouts/pages/Credits";
-import Paid from "../layouts/pages/Paid";
-import Ledger from "../layouts/pages/Ledger";
-import Account from "../layouts/pages/Account";
-import ClientDetails from "../layouts/pages/ClientDetails";
+import Home from "../Pages/Home";
+import Clients from "../Pages/Clients";
+import Credits from "../Pages/Credits";
+import Paid from "../Pages/Paid";
+import Ledger from "../Pages/Ledger";
+import Account from "../Pages/Account";
+import ClientDetails from "../Pages/ClientDetails";
 import Auth from "../layouts/Auth/Auth";
-import Login from "../layouts/pages/Auth/Login";
+import Login from "../Pages/Auth/Login";
+import PrivateRoute from "./PrivateRoutes";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Main/>,
+        element: <PrivateRoute> <Main/> </PrivateRoute>,
         children: [
             {
                 path: "/",
@@ -41,7 +42,7 @@ const router = createBrowserRouter([
             }
             ,
             {
-                path: "/client-details",
+                path: "/client-details/:id",
                 element: <ClientDetails/>
             },
             

@@ -7,9 +7,10 @@ interface ICreditModalProps {
     open: any | null;
     setOpen: (value: any | null) => void;
     refetch: () => void;
+    summaryRefetch: () => void;
 }
 
-const CreditModal: React.FC<ICreditModalProps> = ({ open, setOpen, refetch }) => {
+const CreditModal: React.FC<ICreditModalProps> = ({ open, setOpen, refetch, summaryRefetch }) => {
 
     const [form] = Form.useForm();
     const [addCredit] = useAddCreditMutation();
@@ -19,6 +20,7 @@ const CreditModal: React.FC<ICreditModalProps> = ({ open, setOpen, refetch }) =>
             form.resetFields();
             setOpen(null)
             refetch()
+            summaryRefetch();
         })
     };
 

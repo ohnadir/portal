@@ -1,28 +1,36 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ConfigProvider, Input, Select, Table, type TableColumnsType } from 'antd';
+import { ConfigProvider, Input, Select, Switch, Table, type TableColumnsType } from 'antd';
 import type { RowSelectionType } from 'antd/es/table/interface';
 import { File, Info, Lock, LockOpen, Plus, Search } from 'lucide-react';
 import React, { useState } from 'react';
-import ClientModal from '../../components/Clients/ClientModal';
-import { useClientsQuery } from '../../redux/apiSlices/clientSlice';
-import Logo from "../../assets/logo.png";
+import Logo from "../assets/logo.png";
+import { useClientsQuery, useStatusMutation } from '../redux/apiSlices/clientSlice';
+import ClientModal from '../components/Clients/ClientModal';
+import moment from 'moment';
+import { Link } from 'react-router-dom';
 
 interface IClientProps {
+    _id: string;
     key: string;
     name: string;
     address: string;
+    email: string;
+    contact: string;
     credit: string;
-    paid: string;
-    due: string;
+    balance: string;
+    createdAt: string;
+    userId: string;
     profile: string;
+    status: "active" | "inactive"
 }
 
 const Clients: React.FC = () => {
     const [page, setPage] = useState(1);
-    const [selectionType, setSelectionType] = useState<RowSelectionType>('checkbox');
+    const [selectionType, _setSelectionType] = useState<RowSelectionType>('checkbox');
     const [open, setOpen] = useState(false);
+    const [status] = useStatusMutation();
 
-    const { data: clients, isLoading } = useClientsQuery(undefined);
+    const { data: clients, isLoading, refetch } = useClientsQuery(undefined);
     const rowSelection = {
         onChange: (selectedRowKeys: React.Key[], selectedRows: IClientProps[]) => {
             console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
@@ -33,12 +41,25 @@ const Clients: React.FC = () => {
         }),
     };
 
+    const onChange = async (id: string) => {
+        await status(id).unwrap().then(({ data }) => {
+            console.log(data);
+            refetch();
+        })
+    };
+
     const columns: TableColumnsType<IClientProps> = [
         {
             title: 'S.No.',
             dataIndex: 'name',
             key: 'name',
             render: (_: string, _record: IClientProps, index: number) => <p>#{index + 1}</p>,
+        },
+        {
+            title: 'User ID',
+            dataIndex: 'userId',
+            key: 'userId',
+            render: (_: string, _record: IClientProps, index: number) => <p>#{_record.userId}</p>,
         },
         {
             title: 'Client',
@@ -55,27 +76,37 @@ const Clients: React.FC = () => {
             key: 'address',
         },
         {
-            title: 'Credit',
-            dataIndex: 'credit',
-            key: 'credit',
+            title: 'Email',
+            dataIndex: 'email',
+            key: 'email',
         },
         {
-            title: 'Paid',
-            dataIndex: 'paid',
-            key: 'paid',
-            render: (_: string, _record: IClientProps) => <p>{_record.paid}</p>,
+            title: 'Contact',
+            dataIndex: 'contact',
+            key: 'contact',
         },
         {
-            title: 'Due',
-            dataIndex: 'due',
-            key: 'due',
-            render: (_: string, _record: IClientProps) => <p>{ Number(_record.credit) - Number(_record.paid)}</p>,
+            title: 'Reg. Date',
+            dataIndex: 'createdAt',
+            key: 'createdAt',
+            render: (_: string, _record: IClientProps) => <p>{moment(_record?.createdAt).format("l")}</p>,
+        },
+        {
+            title: 'Balance',
+            dataIndex: 'balance',
+            key: 'balance',
         },
         {
             title: 'Actions',
             dataIndex: 'actions',
             key: 'actions',
-            render: (_: string, _record: IClientProps) => <Info size={20} color='#606060' />,
+            render: (_: string, _record: IClientProps) =>
+                <div className='flex item-center gap-3'>
+                    <Link to={`/client-details/${_record._id}`}>
+                        <Info  size={24} color='#606060' />
+                    </Link>
+                    <Switch onChange={() => onChange(_record._id)} value={_record.status === "active" ? true : false} className='custom-switch' />
+                </div>
         },
     ];
 

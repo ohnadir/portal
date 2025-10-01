@@ -1,67 +1,102 @@
-import { ConfigProvider, Table } from 'antd'
+import { ConfigProvider, Table, type TableColumnsType } from 'antd'
 import React, { useState } from 'react'
 import PaidFilterOptions from './PaidFilterOptions';
+import { useClientsQuery } from '../../redux/apiSlices/clientSlice';
+import type { RowSelectionType } from 'antd/es/table/interface';
+import { Info } from 'lucide-react';
+import PaidModal from '../modal/PaidModal';
 
 interface IPaidTableProps {
-    page: number;
-    setPage: (page: number) => void;
+    summaryRefetch: () => void;
 }
 
-const PaidTable: React.FC<IPaidTableProps> = ({ page, setPage }) => {
+interface IClientProps {
+    _id: string;
+    key: string;
+    name: string;
+    totalCredit: number;
+    totalPaid: number;
+    createdAt: string;
+    userId: string;
+    profile: string;
+    status: "active" | "inactive"
+}
 
-    const [selectionType, setSelectionType] = useState<'checkbox' | 'radio'>('checkbox');
-
-    const rowSelection = {
-        onChange: (selectedRowKeys: number[], selectedRows: string[]) => {
-            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-        },
-        getCheckboxProps: (record: string) => ({
-            disabled: record?.name === 'Disabled User',
-            // Column configuration not to be checked
-            name: record?.name,
-        }),
-    };
-
-    const columns = [
-        {
-            title: 'S.No.',
-            dataIndex: 'name',
-            key: 'name',
-            render: (_: number, record: string, index: number) => <p>{(page - 1) * 10 + index + 1}</p>,
-        },
-        {
-            title: 'Company Name',
-            dataIndex: 'company_name',
-            key: 'company_name',
-        },
-        {
-            title: 'City/Country',
-            dataIndex: 'country',
-            key: 'country',
-        },
-        {
-            title: 'Industry',
-            dataIndex: 'industry',
-            key: 'industry',
-        },
-        {
-            title: 'Company Type',
-            dataIndex: 'company_type',
-            key: 'company_type',
-        },
-        {
-            title: 'Actions',
-            dataIndex: 'actions',
-            key: 'actions',
-            render: (_: number, record: string) => (
-                <div className=" flex items-center gap-4">
-                    <p>
-                        Add credit {record}
-                    </p>
+const PaidTable: React.FC<IPaidTableProps> = ({ summaryRefetch}) => {
+    const [page, setPage] = useState(1)
+    const [selectionType, setSelectionType] = useState<RowSelectionType>('checkbox');
+        const [open, setOpen] = useState<IClientProps | null>(null);
+    
+        const { data: clients, isLoading, refetch } = useClientsQuery(undefined);
+        const rowSelection = {
+            onChange: (selectedRowKeys: React.Key[], selectedRows: IClientProps[]) => {
+                console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+            },
+            getCheckboxProps: (record: IClientProps) => ({
+                disabled: record.name === 'Disabled User',
+                name: record.name,
+            }),
+        };
+    
+        const columns: TableColumnsType<IClientProps> = [
+            {
+                title: 'S.No.',
+                dataIndex: 'name',
+                key: 'name',
+                render: (_: string, _record: IClientProps, index: number) => <p>#{index + 1}</p>,
+            },
+            {
+                title: 'User Id',
+                dataIndex: 'userId',
+                key: 'userId',
+            },
+            {
+                title: 'Client',
+                dataIndex: 'client',
+                key: 'client',
+                render: (_: string, _record: IClientProps) => <div className='flex items-center gap-2'>
+                    <img width={35} height={35} src={_record.profile} alt="" />
+                    <p>{_record.name}</p>
                 </div>
-            ),
-        },
-    ];
+            },
+            {
+                title: 'Address',
+                dataIndex: 'address',
+                key: 'address',
+            },
+            {
+                title: 'Address',
+                dataIndex: 'address',
+                key: 'address',
+            },
+            {
+                title: 'Credit',
+                dataIndex: 'totalCredit',
+                key: 'totalCredit',
+            },
+            {
+                title: 'Paid',
+                dataIndex: 'totalPaid',
+                key: 'totalPaid'
+            },
+            {
+                title: 'Balance',
+                dataIndex: 'balance',
+                key: 'balance',
+                render: (_: string, _record: IClientProps) => <p>{Number(_record.totalCredit) - Number(_record.totalPaid)}</p>,
+            },
+            {
+                title: 'Status',
+                dataIndex: 'status',
+                key: 'status'
+            },
+            {
+                title: 'Actions',
+                dataIndex: 'actions',
+                key: 'actions',
+                render: (_: string, _record: IClientProps) => <button onClick={() => setOpen(_record)} className='cursor-pointer bg-[#F57674] text-white px-3 py-1 rounded-[16px]'>Add Paid</button>
+            },
+        ];
 
     return (
         <div className='rounded-[16px] bg-white p-3 mt-3' style={{ boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.16)" }}>
@@ -74,15 +109,12 @@ const PaidTable: React.FC<IPaidTableProps> = ({ page, setPage }) => {
                             borderRadius: 100,
                             colorPrimary: 'white',
                         },
-                    },
-                    token: {
-                        // colorPrimary: "white"
-                    },
+                    }
                 }}
             >
                 <Table
                     columns={columns}
-                    // dataSource={companyData?.companies}
+                    dataSource={clients}
                     rowSelection={{
                         type: selectionType,
                         ...rowSelection,
@@ -93,6 +125,7 @@ const PaidTable: React.FC<IPaidTableProps> = ({ page, setPage }) => {
                     }}
                 />
             </ConfigProvider>
+             <PaidModal summaryRefetch={summaryRefetch} open={open} setOpen={setOpen} refetch={refetch} />
         </div>
     )
 }

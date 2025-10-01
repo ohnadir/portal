@@ -1,103 +1,74 @@
 import { ConfigProvider, Select, Table, type TableColumnsType } from 'antd';
 import { Info } from 'lucide-react';
 import React from 'react';
+import { useActiveClientsQuery, useClientsQuery } from '../../redux/apiSlices/clientSlice';
 
 interface IClientProps {
+    _id: string;
     key: string;
     name: string;
-    address: string;
-    credit: string;
-    paid: string;
-    due: string;
+    totalCredit: number;
+    totalPaid: number;
+    createdAt: string;
+    userId: string;
+    profile: string;
+    status: "active" | "inactive"
 }
 
 const ActiveClientTable: React.FC = () => {
+    const { data: clients} = useActiveClientsQuery(undefined);
     const columns: TableColumnsType<IClientProps> = [
-        {
-            title: 'S.No.',
-            dataIndex: 'name',
-            key: 'name',
-            render: (_: string, record: IClientProps, index: number) => <p>#{index + 1}</p>,
-        },
-        {
-            title: 'Client',
-            dataIndex: 'client',
-            key: 'client',
-            render: (_: string, record: IClientProps, index: number) => <div className='flex items-center gap-2'>
-                <img width={35} height={35} src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="" />
-                <p>John {index + 1}</p>
-            </div>
-        },
-        {
-            title: 'Address',
-            dataIndex: 'address',
-            key: 'country',
-        },
-        {
-            title: 'Credit',
-            dataIndex: 'credit',
-            key: 'credit',
-        },
-        {
-            title: 'Paid',
-            dataIndex: 'paid',
-            key: 'paid',
-        },
-        {
-            title: 'Due',
-            dataIndex: 'due',
-            key: 'due',
-        },
-        {
-            title: 'Actions',
-            dataIndex: 'actions',
-            key: 'actions',
-            render: (_: string, record: IClientProps) => <Info size={20} color='#606060' />,
-        },
-    ];
+            {
+                title: 'S.No.',
+                dataIndex: 'name',
+                key: 'name',
+                render: (_: string, _record: IClientProps, index: number) => <p>{index + 1}</p>,
+            },
+            {
+                title: 'User Id',
+                dataIndex: 'userId',
+                key: 'userId',
+            },
+            {
+                title: 'Client',
+                dataIndex: 'client',
+                key: 'client',
+                render: (_: string, _record: IClientProps) => <div className='flex items-center gap-2'>
+                    <img width={35} height={35} src={_record.profile} alt="" />
+                    <p>{_record.name}</p>
+                </div>
+            },
+            {
+                title: 'Address',
+                dataIndex: 'address',
+                key: 'address',
+            },
+            {
+                title: 'Credit',
+                dataIndex: 'totalCredit',
+                key: 'totalCredit',
+            },
+            {
+                title: 'Paid',
+                dataIndex: 'totalPaid',
+                key: 'totalPaid'
+            },
+            {
+                title: 'Due',
+                dataIndex: 'due',
+                key: 'due',
+                render: (_: string, _record: IClientProps) => <p>{Number(_record.totalCredit) - Number(_record.totalPaid)}</p>,
+            },
+            {
+                title: 'Actions',
+                dataIndex: 'actions',
+                key: 'actions',
+                render: (_: string, _record: IClientProps) => 
+                    <Info size={20} color='#606060' />
+            },
+        ];
 
-    const dataSource: IClientProps[] = [
-        {
-            key: '1',
-            name: 'Nadir',
-            address: 'Dhaka',
-            credit: '100',
-            paid: '50',
-            due: '50',
-        },
-        {
-            key: '2',
-            name: 'John',
-            address: 'Dhaka',
-            credit: '100',
-            paid: '50',
-            due: '50',
-        },
-        {
-            key: '3',
-            name: 'John',
-            address: 'Dhaka',
-            credit: '100',
-            paid: '50',
-            due: '50',
-        },
-        {
-            key: '4',
-            name: 'John',
-            address: 'Dhaka',
-            credit: '100',
-            paid: '50',
-            due: '50',
-        },
-        {
-            key: '5',
-            name: 'John',
-            address: 'Dhaka',
-            credit: '100',
-            paid: '50',
-            due: '50',
-        },
-    ];
+    console.log(clients);
 
     return (
         <div className='bg-white p-3 mt-3 rounded-[16px]' style={{ boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.16)" }}>
@@ -145,7 +116,10 @@ const ActiveClientTable: React.FC = () => {
             >
                 <Table<IClientProps>
                     columns={columns}
-                    dataSource={dataSource}
+                    dataSource={clients?.slice(0, 5)?.map((item: IClientProps, index:string) => ({
+                        id: index,
+                        ...item
+                    }))}
                     pagination={false}
                 />
             </ConfigProvider>

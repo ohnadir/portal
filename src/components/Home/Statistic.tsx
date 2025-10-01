@@ -1,8 +1,11 @@
 import React from 'react'
 import StatisticTitle from '../Common/StatisticTitle'
 import { BanknoteArrowUp, CircleDollarSign, Info, UsersRound } from 'lucide-react'
+import { useSummaryQuery } from '../../redux/apiSlices/clientSlice';
 
 const Statistic: React.FC = () => {
+    const { data: summary } = useSummaryQuery(undefined);
+    console.log(summary)
     return (
         <div >
             <div className='grid grid-cols-4 gap-3'>
@@ -26,11 +29,11 @@ const Statistic: React.FC = () => {
                     <div className='flex items-center justify-between mt-[15px]'>
                         <div className='flex items-center gap-2'>
                             <p className='text-[#606060]'>Total:</p>
-                            <p className='text-[24px] font-medium'>10000</p>
-                        </div>
+                            <p className='text-[24px] font-medium'>{summary?.totalClients}</p>
+                        </div>  
                         <div className='flex items-center gap-2'>
                             <p className='text-[#606060]'>Active:</p>
-                            <p className='text-[24px] font-medium'>10000</p>
+                            <p className='text-[24px] font-medium'>{summary?.totalClient}</p>
                         </div>
 
                     </div>
@@ -56,11 +59,11 @@ const Statistic: React.FC = () => {
                     <div className='flex items-center justify-between mt-[15px]'>
                         <div className='flex items-center gap-2'>
                             <p className='text-[#606060]'>Today</p>
-                            <p className='text-[24px] font-medium'>10000</p>
+                            <p className='text-[24px] font-medium'>{summary?.todayCredit}</p>
                         </div>
                         <div className='flex items-center gap-2'>
                             <p className='text-[#606060]'>Total:</p>
-                            <p className='text-[24px] font-medium'>10000</p>
+                            <p className='text-[24px] font-medium'>{summary?.totalCredit}</p>
                         </div>
 
                     </div>
@@ -86,11 +89,11 @@ const Statistic: React.FC = () => {
                     <div className='flex items-center justify-between mt-[15px]' >
                         <div className='flex items-center gap-2'>
                             <p className='text-[#606060]'>Today:</p>
-                            <p className='text-[24px] font-medium'>10000</p>
+                            <p className='text-[24px] font-medium'>{summary?.todayPaid}</p>
                         </div>
                         <div className='flex items-center gap-2'>
                             <p className='text-[#606060]'>Total:</p>
-                            <p className='text-[24px] font-medium'>10000</p>
+                            <p className='text-[24px] font-medium'>{summary?.totalPaid}</p>
                         </div>
 
                     </div>
@@ -118,11 +121,11 @@ const Statistic: React.FC = () => {
                     <div className='flex items-center justify-between mt-[15px]'>
                         <div className='flex items-center gap-2'>
                             <p className='text-[#606060]'>Today:</p>
-                            <p className='text-[24px] text-red-700 font-medium'>- 10000</p>
+                            <p className='text-[24px] text-red-700 font-medium'>{summary?.todayDue}</p>
                         </div>
                         <div className='flex items-center gap-2'>
                             <p className='text-[#606060]'>Total:</p>
-                            <p className='text-[24px] text-red-700 font-medium'>-10000</p>
+                            <p className='text-[24px] text-red-700 font-medium'>{summary?.balance}</p>
                         </div>
 
                     </div>

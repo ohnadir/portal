@@ -9,17 +9,23 @@ import Logo from "../../assets/logo.png";
 import CreditModal from '../modal/CreditModal';
 
 interface ICreditProps {
+    _id: string;
     key: string;
     name: string;
-    address: string;
-    credit: string;
-    paid: string;
-    due: string;
+    totalCredit: number;
+    totalPaid: number;
+    createdAt: string;
+    userId: string;
     profile: string;
+    status: "active" | "inactive"
+}
+
+interface ICreditTableProps {
+    summaryRefetch: ()=> void;
 }
 
 
-const CreditTable: React.FC = () => {
+const CreditTable: React.FC<ICreditTableProps> = ({summaryRefetch}) => {
     const [page, setPage] = useState(1);
     const [selectionType, setSelectionType] = useState<RowSelectionType>('checkbox');
     const [open, setOpen] = useState<ICreditProps | null>(null);
@@ -35,12 +41,18 @@ const CreditTable: React.FC = () => {
         }),
     };
 
+    console.log(clients);
     const columns: TableColumnsType<ICreditProps> = [
         {
             title: 'S.No.',
             dataIndex: 'name',
             key: 'name',
-            render: (_: string, _record: ICreditProps, index: number) => <p>#{index + 1}</p>,
+            render: (_: string, _record: ICreditProps, index: number) => <p>{index + 1}</p>,
+        },
+        {
+            title: 'User Id',
+            dataIndex: 'userId',
+            key: 'userId',
         },
         {
             title: 'Client',
@@ -58,29 +70,30 @@ const CreditTable: React.FC = () => {
         },
         {
             title: 'Credit',
-            dataIndex: 'credit',
-            key: 'credit',
+            dataIndex: 'totalCredit',
+            key: 'totalCredit',
         },
         {
             title: 'Paid',
-            dataIndex: 'paid',
-            key: 'paid',
-            render: (_: string, _record: ICreditProps) => <p>{_record.paid}</p>,
+            dataIndex: 'totalPaid',
+            key: 'totalPaid'
         },
         {
             title: 'Due',
             dataIndex: 'due',
             key: 'due',
-            render: (_: string, _record: ICreditProps) => <p>{Number(_record.credit) - Number(_record.paid)}</p>,
+            render: (_: string, _record: ICreditProps) => <p>{Number(_record.totalCredit) - Number(_record.totalPaid)}</p>,
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status'
         },
         {
             title: 'Actions',
             dataIndex: 'actions',
             key: 'actions',
-            render: (_: string, _record: ICreditProps) => <div className='flex items-center gap-3'>
-                <Info size={20} color='#606060' />
-                <button onClick={() => setOpen(_record)} className='cursor-pointer bg-[#F57674] text-white px-3 py-1 rounded-[16px]'>Add Credit</button>
-            </div>,
+            render: (_: string, _record: ICreditProps) => <button onClick={() => setOpen(_record)} className='cursor-pointer bg-[#F57674] text-white px-3 py-1 rounded-[16px]'>Add Credit</button>
         },
     ];
 
@@ -103,10 +116,7 @@ const CreditTable: React.FC = () => {
                                             borderRadius: 100,
                                             colorPrimary: 'white',
                                         },
-                                    },
-                                    token: {
-                                        // colorPrimary: "white"
-                                    },
+                                    }
                                 }}
                             >
                                 <Table<ICreditProps>
@@ -126,7 +136,7 @@ const CreditTable: React.FC = () => {
                     )
             }
 
-            <CreditModal open={open} setOpen={setOpen} refetch={refetch} />
+            <CreditModal summaryRefetch={summaryRefetch} open={open} setOpen={setOpen} refetch={refetch} />
         </>
     )
 }

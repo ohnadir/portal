@@ -1,71 +1,10 @@
 import { ConfigProvider, Select } from 'antd';
-import React from 'react';
+import React, { type FC } from 'react';
 import { BarChart, Bar, ResponsiveContainer, XAxis, YAxis } from 'recharts';
-
-const data = [
-    {
-        name: 'Jan',
-        uv: 4000,
-        pv: 2400,
-    },
-    {
-        name: 'Feb',
-        uv: 3000,
-        pv: 1398,
-    },
-    {
-        name: 'Mar',
-        uv: 2000,
-        pv: 9800,
-    },
-    {
-        name: 'Apr',
-        uv: 2780,
-        pv: 3908,
-    },
-    {
-        name: 'May',
-        uv: 1890,
-        pv: 4800,
-    },
-    {
-        name: 'Jun',
-        uv: 2390,
-        pv: 3800,
-    },
-    {
-        name: 'Jul',
-        uv: 3490,
-        pv: 4300,
-    },
-    {
-        name: 'Aug',
-        uv: 3490,
-        pv: 4300,
-    },
-    {
-        name: 'Sep',
-        uv: 3490,
-        pv: 4300,
-    },
-    {
-        name: 'Oct',
-        uv: 3490,
-        pv: 4300,
-    },
-    {
-        name: 'Nov',
-        uv: 3490,
-        pv: 4300,
-    },
-    {
-        name: 'Dec',
-        uv: 3490,
-        pv: 4300,
-    },
-];
+import { useClientStatisticQuery } from '../../redux/apiSlices/clientSlice';
 
 const ClientStatistic: React.FC = () => {
+    const { data: clients} = useClientStatisticQuery(undefined);
     return (
         <div className='bg-white p-3 mt-3 rounded-[16px]' style={{ boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.16)" }}>
             {/* statistic heading */}
@@ -114,14 +53,14 @@ const ClientStatistic: React.FC = () => {
             <div style={{ width: '100%', marginTop: 25, height: 273 }}>
                 <ResponsiveContainer>
                     <BarChart
-                        data={data}
+                        data={clients}
                         margin={{
                             left: -6,
                         }}
                     >
-                        <XAxis dataKey="name" />
+                        <XAxis dataKey="month" />
                         <YAxis />
-                        <Bar dataKey="uv" fill="#8884d8" />
+                        <Bar dataKey="clients" fill="#8884d8" />
                     </BarChart>
                 </ResponsiveContainer>
             </div>

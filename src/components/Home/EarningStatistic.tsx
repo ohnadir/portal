@@ -1,71 +1,11 @@
 import { ConfigProvider, Select } from 'antd';
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { useTransactionStatisticQuery } from '../../redux/apiSlices/transactionSlice';
 
-const data = [
-    {
-        name: 'Jan',
-        uv: 4000,
-        pv: 2400,
-    },
-    {
-        name: 'Feb',
-        uv: 3000,
-        pv: 1398,
-    },
-    {
-        name: 'Mar',
-        uv: 2000,
-        pv: 9800,
-    },
-    {
-        name: 'Apr',
-        uv: 2780,
-        pv: 3908,
-    },
-    {
-        name: 'May',
-        uv: 1890,
-        pv: 4800,
-    },
-    {
-        name: 'Jun',
-        uv: 2390,
-        pv: 3800,
-    },
-    {
-        name: 'Jul',
-        uv: 3490,
-        pv: 4300,
-    },
-    {
-        name: 'Aug',
-        uv: 3490,
-        pv: 4300,
-    },
-    {
-        name: 'Sep',
-        uv: 3490,
-        pv: 4300,
-    },
-    {
-        name: 'Oct',
-        uv: 3490,
-        pv: 4300,
-    },
-    {
-        name: 'Nov',
-        uv: 3490,
-        pv: 4300,
-    },
-    {
-        name: 'Dec',
-        uv: 3490,
-        pv: 4300,
-    },
-];
 
 const EarningStatistic: React.FC = () => {
+    const { data: statistic} = useTransactionStatisticQuery(undefined);
     return (
         <div className='bg-white p-3 mt-3 rounded-[16px]' style={{ boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.16)" }}>
 
@@ -123,16 +63,16 @@ const EarningStatistic: React.FC = () => {
             <div style={{ width: '100%', marginTop: 25, height: 260}}>
                 <ResponsiveContainer >
                     <LineChart
-                        data={data}
+                        data={statistic}
                         margin={{
                             left: -6,
                         }}
                     >
-                        <XAxis dataKey="name" />
+                        <XAxis dataKey="month" />
                         <YAxis />
                         <Tooltip />
-                        <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }} />
-                        <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+                        <Line type="monotone" dataKey="credit" stroke="#1E90FF" activeDot={{ r: 8 }} />
+                        <Line type="monotone" dataKey="paid" stroke="#FFC107" />
                     </LineChart>
                 </ResponsiveContainer>
             </div>

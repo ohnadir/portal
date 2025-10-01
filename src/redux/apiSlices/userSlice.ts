@@ -16,8 +16,11 @@ const userSlice = api.injectEndpoints({
             query: () => {
                 return{
                     method: "GET",
-                    url: "/user/profile"
+                    url: "/user"
                 }
+            },
+            transformResponse: (response: any) => {
+                return response.data;
             },
             providesTags: ["user"]
         }),

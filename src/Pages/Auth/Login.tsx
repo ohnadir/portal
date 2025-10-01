@@ -1,7 +1,7 @@
 import { Button, Form, Input, type FormProps } from "antd";
-import Logo from "../../../assets/logo.png";
-import { useLoginMutation } from "../../../redux/apiSlices/userSlice";
+import Logo from "../../assets/logo.png";
 import { useNavigate } from "react-router-dom";
+import { useLoginMutation } from "../../redux/apiSlices/userSlice";
 
 const Login = () => {
     const [login] = useLoginMutation();

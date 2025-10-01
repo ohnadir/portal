@@ -1,8 +1,14 @@
 import React from 'react';
-import { useSummaryQuery } from '../../redux/apiSlices/clientSlice';
 
-const Summary: React.FC = () => {
-    const { data: summary } = useSummaryQuery(undefined);
+interface ISummaryProps{
+    summary: {
+        totalCredit: number;
+        totalPaid: number;
+        balance: number
+    };
+}
+
+const Summary: React.FC<ISummaryProps> = ({summary}) => {
     return (
         <div className='grid grid-cols-3 gap-2 h-[65px] my-2'>
             <div className='rounded-[16px] flex items-center justify-center bg-white' style={{ boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.16)" }}>

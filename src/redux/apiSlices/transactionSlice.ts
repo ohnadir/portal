@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import statistic from "antd/es/statistic";
 import { api } from "../api/baseApi";
 
 const transactionSlice = api.injectEndpoints({
@@ -15,11 +16,21 @@ const transactionSlice = api.injectEndpoints({
         }),
         addDebit: builder.mutation({
             query: ({id, body}: {id: string, body: any}) => {
-                console.log(id)
                 return {
                     method: "PUT",
                     url: `/transaction/${id}`,
                     body: body
+                }
+            },
+            transformResponse: (response: any) => {
+                return response.data;
+            }
+        }),
+        transactionStatistic: builder.query({
+            query: () => {
+                return {
+                    method: "GET",
+                    url: "/transaction/statistic"
                 }
             },
             transformResponse: (response: any) => {
@@ -44,4 +55,5 @@ export const {
     useAddCreditMutation,
     useAddDebitMutation,
     useSummaryQuery,
+    useTransactionStatisticQuery
 } = transactionSlice;
