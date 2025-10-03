@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ConfigProvider, Input, Select, Table, type TableColumnsType } from 'antd'
 import React, { useState } from 'react'
-import type { RowSelectionType } from 'antd/es/table/interface';
 import { useClientsQuery } from '../../redux/apiSlices/clientSlice';
 import Logo from "../../assets/logo.png";
 import CreditModal from '../modal/CreditModal';

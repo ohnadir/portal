@@ -1,7 +1,6 @@
 import { ConfigProvider, Input, Select, Table, type TableColumnsType } from 'antd'
 import React, { useState } from 'react'
 import { useClientsQuery } from '../../redux/apiSlices/clientSlice';
-import type { RowSelectionType } from 'antd/es/table/interface';
 import PaidModal from '../modal/PaidModal';
 import CreditModal from '../modal/CreditModal';
 import { Search } from 'lucide-react';

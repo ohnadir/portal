@@ -1,5 +1,5 @@
 import { ConfigProvider, Input, Select, Table } from 'antd';
-import { FileText, PencilLine, Search, Trash2 } from 'lucide-react';
+import { FileText, PencilLine, Trash2 } from 'lucide-react';
 import moment from 'moment';
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';

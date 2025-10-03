@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ConfigProvider, Input, Select, Switch, Table, type TableColumnsType } from 'antd';
-import type { RowSelectionType } from 'antd/es/table/interface';
 import { File, Info, Lock, LockOpen, Plus, Search } from 'lucide-react';
 import React, { useState } from 'react';
 import Logo from "../assets/logo.png";
@@ -30,7 +29,6 @@ const Clients: React.FC = () => {
     const [status] = useStatusMutation();
     const [clientStatus, setClientStatus] = useState<"active" | "inactive" | undefined>(undefined);
     const [search , setSearch] = useState<string | undefined>("");
-    const [selectionType, _setSelectionType] = useState<RowSelectionType>('checkbox');
     const [limit, setLimit] = useState(10);
     const { data: clients, isLoading, refetch } = useClientsQuery({page, search, status: clientStatus, limit});
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -43,7 +41,7 @@ const Clients: React.FC = () => {
     };
 
     const onChange = async (id: string) => {
-        await status(id).unwrap().then(({ data }) => {
+        await status(id).unwrap().then(() => {
             refetch();
         })
     };

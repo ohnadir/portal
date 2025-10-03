@@ -17,7 +17,7 @@ const ClientDetails: React.FC = () => {
     const [status] = useStatusMutation();
 
     const onChange = async () => {
-        await status(id).unwrap().then(({ data }) => {
+        await status(id).unwrap().then(() => {
             refetch();
         })
     };
