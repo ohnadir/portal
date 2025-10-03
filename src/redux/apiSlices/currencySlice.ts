@@ -5,7 +5,6 @@ const currencySlice = api.injectEndpoints({
     endpoints: (builder)=>({
         addCurrency: builder.mutation({
             query: (data) => {
-                console.log(data)
                 return{
                     method: "POST",
                     url: "/currency",

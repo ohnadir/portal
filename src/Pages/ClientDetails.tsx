@@ -18,7 +18,6 @@ const ClientDetails: React.FC = () => {
 
     const onChange = async () => {
         await status(id).unwrap().then(({ data }) => {
-            console.log(data);
             refetch();
         })
     };
@@ -105,7 +104,8 @@ const ClientDetails: React.FC = () => {
 
             {/* Table Section */}
             <div className="bg-white rounded-[16px] p-6" style={{ boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.16)" }}>
-                <TransactionTable 
+                <TransactionTable
+                    balance={clientDetails?.balance} 
                     setDate={setDate}
                     date={date}
                     setSearchTerm={setSearchTerm}

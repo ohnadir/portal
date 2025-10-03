@@ -33,12 +33,13 @@ interface ITransactionTableProps {
     refetch: () => void;
     totalCredit: number;
     totalPaid: number;
+    balance: string;
     date: string | undefined;
     setDate: (value: string) => void;
     setSearchTerm: (value: string) => void;
 }
 
-const TransactionTable: React.FC<ITransactionTableProps> = ({ transactions, pagination, refetch, setPage, page, totalCredit, totalPaid, date, setDate, setSearchTerm }) => {
+const TransactionTable: React.FC<ITransactionTableProps> = ({ transactions, pagination, refetch, setPage, page, totalCredit, totalPaid, date, balance, setDate, setSearchTerm }) => {
     const [open, setOpen] = useState<ITransactionProps | null>(null);
     const [deleteTransaction] = useDeleteTransactionMutation();
     const itemsPerPage = 10;
@@ -145,6 +146,9 @@ const TransactionTable: React.FC<ITransactionTableProps> = ({ transactions, pagi
                     </div>
                     <div className='rounded-[66px] flex items-center justify-center bg-white w-[200px] py-2' style={{ boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.16)" }}>
                         <p className='text-[16px] text-center leading-[24px] text-[#080808] font-medium'>Total Paid <span className='text-[#FF4040] pl-1'>৳ {totalPaid || 0}</span></p>
+                    </div>
+                    <div className='rounded-[66px] flex items-center justify-center bg-white w-[200px] py-2' style={{ boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.16)" }}>
+                        <p className='text-[16px] text-center leading-[24px] text-[#080808] font-medium'>Total Balance <span className='text-[#FF4040] pl-1'>৳ {balance || 0}</span></p>
                     </div>
                 </div>
                 <div className='flex items-center justify-end gap-4'>

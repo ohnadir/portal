@@ -3,9 +3,26 @@ import { api } from "../api/baseApi";
 
 const transactionSlice = api.injectEndpoints({
     endpoints: (builder) => ({
+        transactions: builder.query({
+            query: ({page, search, client, date, type, limit}: {page?: number, search?: string, client?: string, date?: string, type?: string, limit?: number}) => {
+                const params = new URLSearchParams()
+                if (page) params.append("page", page.toString())
+                if (search) params.append("searchTerm", search)
+                if (client) params.append("client", client)
+                if (date) params.append("date", date)
+                if (type) params.append("type", type)
+                if (limit) params.append("limit", limit.toString())
+                return {
+                    method: "GET",
+                    url: `/transaction?${params.toString()}`
+                }
+            },
+            transformResponse: (response: any) => {
+                return response.data;
+            }
+        }),
         addCredit: builder.mutation({
             query: ({id, body}: {id: string, body: any}) => {
-                console.log(id)
                 return {
                     method: "PATCH",
                     url: `/transaction/${id}`,
@@ -77,4 +94,5 @@ export const {
     useTransactionStatisticQuery,
     useDeleteTransactionMutation,
     useUpdateTransactionMutation,
+    useTransactionsQuery,
 } = transactionSlice;

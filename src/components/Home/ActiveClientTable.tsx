@@ -54,7 +54,7 @@ const ActiveClientTable: React.FC = () => {
                 key: 'totalPaid'
             },
             {
-                title: 'Due',
+                title: 'Balance',
                 dataIndex: 'due',
                 key: 'due',
                 render: (_: string, _record: IClientProps) => <p>{Number(_record.totalCredit) - Number(_record.totalPaid)}</p>,
@@ -67,8 +67,6 @@ const ActiveClientTable: React.FC = () => {
                     <Info size={20} color='#606060' />
             },
         ];
-
-    console.log(clients);
 
     return (
         <div className='bg-white p-3 mt-3 rounded-[16px]' style={{ boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.16)" }}>

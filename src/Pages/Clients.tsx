@@ -31,22 +31,19 @@ const Clients: React.FC = () => {
     const [clientStatus, setClientStatus] = useState<"active" | "inactive" | undefined>(undefined);
     const [search , setSearch] = useState<string | undefined>("");
     const [selectionType, _setSelectionType] = useState<RowSelectionType>('checkbox');
-    const { data: clients, isLoading, refetch } = useClientsQuery({page, search, status: clientStatus});
-
+    const [limit, setLimit] = useState(10);
+    const { data: clients, isLoading, refetch } = useClientsQuery({page, search, status: clientStatus, limit});
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
     const rowSelection = {
-        onChange: (selectedRowKeys: React.Key[], selectedRows: IClientProps[]) => {
-            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-        },
-        getCheckboxProps: (record: IClientProps) => ({
-            disabled: record.name === 'Disabled User',
-            name: record.name,
-        }),
+        selectedRowKeys,
+        onChange: (e: any) => {
+            setSelectedRowKeys(e);
+        }
     };
 
     const onChange = async (id: string) => {
         await status(id).unwrap().then(({ data }) => {
-            console.log(data);
             refetch();
         })
     };
@@ -197,14 +194,16 @@ const Clients: React.FC = () => {
                             >
                                 <Table<IClientProps>
                                     columns={columns}
-                                    dataSource={clients}
-                                    rowSelection={{
-                                        type: selectionType,
-                                        ...rowSelection,
-                                    }}
+                                    dataSource={clients?.map((client: any) => ({ ...client, key: client._id }))}
+                                    rowSelection={rowSelection}
                                     pagination={{
                                         current: parseInt(Number(page).toString()),
-                                        onChange: (page) => setPage(page),
+                                        pageSize: limit,
+                                        showSizeChanger: true,
+                                        onChange: (page, limit) => {
+                                            setPage(page);
+                                            setLimit(limit);
+                                        },
                                         showTotal: (total, range) => (
                                             <div className='absolute bottom-0 left-0 right-0'>
                                                 Showing {range[0]}–{range[1]} out of {total}

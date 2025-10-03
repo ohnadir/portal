@@ -5,7 +5,6 @@ import { useSummaryQuery } from '../../redux/apiSlices/clientSlice';
 
 const Statistic: React.FC = () => {
     const { data: summary } = useSummaryQuery(undefined);
-    console.log(summary)
     return (
         <div >
             <div className='grid grid-cols-4 gap-3'>
@@ -102,7 +101,7 @@ const Statistic: React.FC = () => {
 
                 <div className='rounded-[16px] p-3 bg-white' style={{ boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.16)" }}> 
                     <StatisticTitle
-                        title='Due'
+                        title='Balance'
                         icon={
                             <Info
                                 size={24}

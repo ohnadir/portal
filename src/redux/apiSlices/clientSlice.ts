@@ -13,11 +13,12 @@ const clientSlice = api.injectEndpoints({
             }
         }),
         clients: builder.query({
-            query: ({page, search, status}: {page?: number, search?: string, status?: "active" | "inactive"}) => {
+            query: ({page, search, status, limit}: {page?: number, search?: string, status?: "active" | "inactive", limit?: number}) => {
                 const params = new URLSearchParams()
                 if (page) params.append("page", page.toString())
                 if (search) params.append("searchTerm", search)
                 if (status) params.append("status", status)
+                if (limit) params.append("limit", limit.toString())
                 return {
                     method: "GET",
                     url: `/client?${params.toString()}`,
@@ -74,8 +75,6 @@ const clientSlice = api.injectEndpoints({
         }),
         updateClient: builder.mutation({
             query: ({id, body}: {id: string, body:any}) => {
-                console.log(id);
-                console.log(body)
                 
                 return {
                     method: "PUT",

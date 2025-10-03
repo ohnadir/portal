@@ -24,21 +24,19 @@ interface IClientProps {
 
 const PaidTable: React.FC<IPaidTableProps> = ({ summaryRefetch }) => {
     const [page, setPage] = useState(1)
-    const [selectionType, _setSelectionType] = useState<RowSelectionType>('checkbox');
     const [open, setOpen] = useState<IClientProps | null>(null);
     const [creditOpen, setCreditOpen] = useState<IClientProps | null>(null);
     const [clientStatus, setClientStatus] = useState<"active" | "inactive" | undefined>(undefined);
     const [search, setSearch] = useState<string | undefined>("");
 
     const { data: clients, refetch } = useClientsQuery({ page, search, status: clientStatus });
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
     const rowSelection = {
-        onChange: (selectedRowKeys: React.Key[], selectedRows: IClientProps[]) => {
-            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-        },
-        getCheckboxProps: (record: IClientProps) => ({
-            disabled: record.name === 'Disabled User',
-            name: record.name,
-        }),
+        selectedRowKeys,
+        onChange: (e: any) => {
+            setSelectedRowKeys(e);
+        }
     };
 
     const columns: TableColumnsType<IClientProps> = [
@@ -167,11 +165,8 @@ const PaidTable: React.FC<IPaidTableProps> = ({ summaryRefetch }) => {
             >
                 <Table
                     columns={columns}
-                    dataSource={clients}
-                    rowSelection={{
-                        type: selectionType,
-                        ...rowSelection,
-                    }}
+                    dataSource={clients?.map((client: any) => ({ ...client, key: client._id }))}
+                    rowSelection={rowSelection}
                     pagination={{
                         current: parseInt(Number(page).toString()),
                         onChange: (page) => setPage(page),

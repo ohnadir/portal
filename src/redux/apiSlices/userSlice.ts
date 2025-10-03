@@ -4,7 +4,6 @@ const userSlice = api.injectEndpoints({
     endpoints: (builder)=>({
         login: builder.mutation({
             query: (data) => {
-                console.log(data)
                 return{
                     method: "POST",
                     url: "/auth/login",

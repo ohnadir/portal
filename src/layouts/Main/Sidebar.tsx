@@ -37,6 +37,12 @@ const Sidebar: React.FC<ISidebarProps> = ({ setNavigationName }) => {
             path: "/payment-paid"
         },
         {
+            id: 4,
+            title: "Transactions",
+            icon: <BanknoteArrowUp size={24} />,
+            path: "/transactions"
+        },
+        {
             id: 5,
             title: "Account Settings",
             icon: <Settings size={24} />,

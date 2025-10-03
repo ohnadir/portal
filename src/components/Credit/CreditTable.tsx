@@ -27,21 +27,19 @@ interface ICreditTableProps {
 
 const CreditTable: React.FC<ICreditTableProps> = ({ summaryRefetch }) => {
     const [page, setPage] = useState(1);
-    const [selectionType, _setSelectionType] = useState<RowSelectionType>('checkbox');
     const [open, setOpen] = useState<ICreditProps | null>(null);
     const [paidOpen, setPaidOpen] = useState<ICreditProps | null>(null);
     const [clientStatus, setClientStatus] = useState<"active" | "inactive" | undefined>(undefined);
     const [search, setSearch] = useState<string | undefined>("");
 
     const { data: clients, isLoading, refetch } = useClientsQuery({ page, search, status: clientStatus });
+    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+
     const rowSelection = {
-        onChange: (selectedRowKeys: React.Key[], selectedRows: ICreditProps[]) => {
-            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-        },
-        getCheckboxProps: (record: ICreditProps) => ({
-            disabled: record?.name === 'Disabled User',
-            name: record?.name,
-        }),
+        selectedRowKeys,
+        onChange: (e: any) => {
+            setSelectedRowKeys(e);
+        }
     };
 
     const columns: TableColumnsType<ICreditProps> = [
@@ -81,7 +79,7 @@ const CreditTable: React.FC<ICreditTableProps> = ({ summaryRefetch }) => {
             key: 'totalPaid'
         },
         {
-            title: 'Due',
+            title: 'Balance',
             dataIndex: 'due',
             key: 'due',
             render: (_: string, _record: ICreditProps) => <p>{Number(_record.totalCredit) - Number(_record.totalPaid)}</p>,
@@ -172,11 +170,8 @@ const CreditTable: React.FC<ICreditTableProps> = ({ summaryRefetch }) => {
                             >
                                 <Table<ICreditProps>
                                     columns={columns}
-                                    dataSource={clients}
-                                    rowSelection={{
-                                        type: selectionType,
-                                        ...rowSelection,
-                                    }}
+                                    dataSource={clients?.map((client: any) => ({ ...client, key: client._id }))}
+                                    rowSelection={rowSelection}
                                     pagination={{
                                         current: parseInt(Number(page).toString()),
                                         onChange: (page) => setPage(page),

@@ -9,6 +9,7 @@ import ClientDetails from "../Pages/ClientDetails";
 import Auth from "../layouts/Auth/Auth";
 import Login from "../Pages/Auth/Login";
 import PrivateRoute from "./PrivateRoutes";
+import Transaction from "../Pages/Transactions";
 
 const router = createBrowserRouter([
     {
@@ -32,10 +33,13 @@ const router = createBrowserRouter([
                 element: <Paid/>
             },
             {
+                path: "/transactions",
+                element: <Transaction/>
+            },
+            {
                 path: "/account-settings",
                 element: <Account/>
-            }
-            ,
+            },
             {
                 path: "/client-details/:id",
                 element: <ClientDetails/>
