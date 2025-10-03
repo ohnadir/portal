@@ -1,33 +1,39 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Form, Input, Modal, Switch, type FormProps } from 'antd';
-import { useAddClientMutation } from "../../redux/apiSlices/clientSlice";
+import { useUpdateClientMutation } from "../../redux/apiSlices/clientSlice";
 
-interface IClientModalProps {
-    open: boolean;
-    setOpen: (value: boolean) => void;
-    refetch?: () => void;
+interface IClientUpdateModalProps {
+    open: object | null;
+    setOpen: (value: object | null) => void;
+    refetch: () => void;
 }
 
-const ClientModal: React.FC<IClientModalProps> = ({ open, setOpen, refetch }) => {
+const ClientUpdateModal: React.FC<IClientUpdateModalProps> = ({ open, setOpen, refetch }) => {
 
-    const [addClient] = useAddClientMutation();
+    const [updateClient] = useUpdateClientMutation();
     const [form] = Form.useForm();
 
     const onFinish: FormProps["onFinish"] = async (values) => {
-        await addClient(values).unwrap().then(() => {
+        await updateClient({id: (open as any)?._id, body:values}).unwrap().then(() => {
             form.resetFields();
-            setOpen(false)
+            setOpen(null)
+            refetch()
         })
     };
+    useEffect(() => {
+        if (open) {
+            form.setFieldsValue(open)
+        }
+    }, [open])
 
     return (
         <div>
             <Modal
-                title={<p className='text-[#2375D0] text-[20px]'>Add Client Details</p>}
+                title={<p className='text-[#2375D0] text-[20px]'>Update Client Details</p>}
                 closable={{ 'aria-label': 'Custom Close Button' }}
-                open={open}
+                open={open !== null}
                 width={720}
-                onCancel={() => setOpen(false)}
+                onCancel={() => setOpen(null)}
                 footer={false}
             >
                 <Form form={form} onFinish={onFinish} style={{ marginTop: 20 }} layout="vertical" className="grid grid-cols-12 gap-4">
@@ -65,7 +71,7 @@ const ClientModal: React.FC<IClientModalProps> = ({ open, setOpen, refetch }) =>
                         <Input.TextArea placeholder='Enter Details' style={{ borderRadius: 14, height: 110, border: "1px solid #E0E0E0" }} />
                     </Form.Item>
 
-                    <Form.Item
+                    {/* <Form.Item
                         className="col-span-6"
                         style={{ marginBottom: 0 }}
                         label="Password"
@@ -77,9 +83,9 @@ const ClientModal: React.FC<IClientModalProps> = ({ open, setOpen, refetch }) =>
                             placeholder='Enter Client password'
                             style={{ borderRadius: 90, height: 44, border: "1px solid #E0E0E0" }}
                         />
-                    </Form.Item>
+                    </Form.Item> */}
 
-                    <Form.Item
+                    {/* <Form.Item
                         className="col-span-6"
                         style={{ marginBottom: 0 }}
                         label="Confirm Password"
@@ -95,9 +101,7 @@ const ClientModal: React.FC<IClientModalProps> = ({ open, setOpen, refetch }) =>
                         hasFeedback
                     >
                         <Input.Password placeholder='Enter Client confirm password' style={{ borderRadius: 90, height: 44, border: "1px solid #E0E0E0" }} />
-                    </Form.Item>
-
-                    <div className="col-span-12 h-[1px] bg-[#E0E0E0] my-2"></div>
+                    </Form.Item> */}
 
                     <div className="col-span-12 flex items-center gap-2">
                         <Form.Item
@@ -117,7 +121,7 @@ const ClientModal: React.FC<IClientModalProps> = ({ open, setOpen, refetch }) =>
 
                     <div className="col-span-12 flex justify-center">
                         <button
-                            className="text-white font-medium w-[486px] flex items-center justify-center gap-2 bg-gradient-to-r from-[#0058D4] to-[#3D8CFF] h-11 rounded-[90px]"
+                            className="text-white cursor-pointer font-medium w-[486px] flex items-center justify-center gap-2 bg-gradient-to-r from-[#0058D4] to-[#3D8CFF] h-11 rounded-[90px]"
                             style={{ boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.16)" }}
                         >
                             Confirm
@@ -130,4 +134,4 @@ const ClientModal: React.FC<IClientModalProps> = ({ open, setOpen, refetch }) =>
     );
 };
 
-export default ClientModal;
+export default ClientUpdateModal;

@@ -26,14 +26,12 @@ interface IClientProps {
 
 const Clients: React.FC = () => {
     const [page, setPage] = useState(1);
+    const [open, setOpen] = useState(false);
+    const [status] = useStatusMutation();
     const [clientStatus, setClientStatus] = useState<"active" | "inactive" | undefined>(undefined);
     const [search , setSearch] = useState<string | undefined>("");
     const [selectionType, _setSelectionType] = useState<RowSelectionType>('checkbox');
-    const [open, setOpen] = useState(false);
-    const [status] = useStatusMutation();
-
     const { data: clients, isLoading, refetch } = useClientsQuery({page, search, status: clientStatus});
-    console.log(clients);
 
 
     const rowSelection = {

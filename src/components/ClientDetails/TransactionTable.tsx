@@ -25,9 +25,23 @@ interface IPaginationProps {
     totalPage: number;
 }
 
-const TransactionTable: React.FC<{ transactions: ITransactionProps[]; pagination: IPaginationProps, refetch: () => void }> = ({ transactions, refetch }) => {
+interface ITransactionTableProps {
+    setPage: (page: number) => void;
+    page: number;
+    transactions: ITransactionProps[];
+    pagination: IPaginationProps;
+    refetch: () => void;
+    totalCredit: number;
+    totalPaid: number;
+    date: string | undefined;
+    setDate: (value: string) => void;
+    setSearchTerm: (value: string) => void;
+}
+
+const TransactionTable: React.FC<ITransactionTableProps> = ({ transactions, pagination, refetch, setPage, page, totalCredit, totalPaid, date, setDate, setSearchTerm }) => {
     const [open, setOpen] = useState<ITransactionProps | null>(null);
     const [deleteTransaction] = useDeleteTransactionMutation();
+    const itemsPerPage = 10;
 
     const handleDeleteTransaction = async (id: string) => {
         Swal.fire({
@@ -62,6 +76,7 @@ const TransactionTable: React.FC<{ transactions: ITransactionProps[]; pagination
             title: "S.No",
             dataIndex: "sno",
             key: "sno",
+            render: (_: string, _record: ITransactionProps, index: number) => <p>{((page - 1) * itemsPerPage) + index + 1}</p>
 
         },
         {
@@ -74,7 +89,15 @@ const TransactionTable: React.FC<{ transactions: ITransactionProps[]; pagination
             dataIndex: "date",
             key: "date",
             render: (_: string, value: ITransactionProps) => (
-                <span>{moment(value?.createdAt).format("l")}</span>
+                <span>{moment(value?.createdAt).format("MMM DD H:mm A")}</span>
+            ),
+        },
+        {
+            title: "Type",
+            dataIndex: "type",
+            key: "type",
+            render: (_: string, value: ITransactionProps) => (
+                <span>{value?.type?.charAt(0).toUpperCase() + value?.type.slice(1)}</span>
             ),
         },
         {
@@ -115,44 +138,61 @@ const TransactionTable: React.FC<{ transactions: ITransactionProps[]; pagination
 
     return (
         <div>
-            <div className='flex items-center justify-end gap-4 mb-3'>
-                <p>Transaction summary need to add here</p>
-                <FileText size={20} color='blue' />
-                <Input
-                    style={{ width: "335px", paddingLeft: 5, height: 44, borderRadius: 60, background: "white" }}
-                    placeholder="Search"
-                    prefix={
-                        <div className='w-[36px] h-[36px] rounded-full bg-[#F1F1F1] flex items-center justify-center'>
-                            <Search
-                                size={24}
-                                stroke="url(#grad)"
-                            >
-                                <defs>
-                                    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
-                                        <stop offset="0%" stopColor="#0058D4" />
-                                        <stop offset="100%" stopColor="#3D8CFF" />
-                                    </linearGradient>
-                                </defs>
-                            </Search>
-                        </div>
-                    }
-                />
-                <Input
-                    type='date'
-                    defaultValue={new Date().toISOString().split("T")[0]}
-                    style={{
-                        width: 150,
-                        paddingLeft: 12,
-                        height: 44,
-                        borderRadius: 60,
-                        background: "white"
-                    }}
-                />
+            <div className='flex items-center justify-between mb-3'>
+                <div className='flex items-center gap-2'>
+                    <div className='rounded-[66px] flex items-center justify-center bg-white w-[200px] py-2' style={{ boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.16)" }}>
+                        <p className='text-[16px] text-center leading-[24px] text-[#080808] font-medium'>Total Credit <span className=' text-[#008000] pl-1'>৳ {totalCredit || 0} </span></p>
+                    </div>
+                    <div className='rounded-[66px] flex items-center justify-center bg-white w-[200px] py-2' style={{ boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.16)" }}>
+                        <p className='text-[16px] text-center leading-[24px] text-[#080808] font-medium'>Total Paid <span className='text-[#FF4040] pl-1'>৳ {totalPaid || 0}</span></p>
+                    </div>
+                </div>
+                <div className='flex items-center justify-end gap-4'>
+                    <FileText size={20} color='blue' />
+                    <Input
+                        style={{ width: "335px", paddingLeft: 5, height: 44, borderRadius: 60, background: "white" }}
+                        placeholder="Search"
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        prefix={
+                            <div className='w-[36px] h-[36px] rounded-full bg-[#F1F1F1] flex items-center justify-center'>
+                                <Search
+                                    size={24}
+                                    stroke="url(#grad)"
+                                >
+                                    <defs>
+                                        <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                            <stop offset="0%" stopColor="#0058D4" />
+                                            <stop offset="100%" stopColor="#3D8CFF" />
+                                        </linearGradient>
+                                    </defs>
+                                </Search>
+                            </div>
+                        }
+                    />
+                    <Input
+                        type='date'
+                        defaultValue={new Date().toISOString().split("T")[0]}
+                        onChange={(e) => setDate(e.target.value)}
+                        value={date}
+                        style={{
+                            width: 150,
+                            paddingLeft: 12,
+                            height: 44,
+                            borderRadius: 60,
+                            background: "white"
+                        }}
+                    />
+                </div>
             </div>
+
             <Table
                 columns={columns}
                 dataSource={transactions}
-                pagination={false}
+                pagination={{
+                    current: parseInt(page.toString()),
+                    onChange: (page) => setPage(page),
+                    total: pagination?.total
+                }}
                 bordered
                 className="shadow-md"
             />

@@ -39,10 +39,14 @@ const clientSlice = api.injectEndpoints({
             }
         }),
         clientDetails: builder.query({
-            query: (id) => {
+            query: ({id, page, date, search}: {id: string, page: number, date?: string, search?: string}) => {
+                const params = new URLSearchParams()
+                if (page) params.append("page", page.toString())
+                if (search) params.append("searchTerm", search)
+                if (date) params.append("date", date)
                 return {
                     method: "GET",
-                    url: `/transaction/${id}`
+                    url: `/transaction/${id}?${params.toString()}`
                 }
             },
             transformResponse: (response: any) => {
@@ -68,6 +72,18 @@ const clientSlice = api.injectEndpoints({
                 }
             }
         }),
+        updateClient: builder.mutation({
+            query: ({id, body}: {id: string, body:any}) => {
+                console.log(id);
+                console.log(body)
+                
+                return {
+                    method: "PUT",
+                    url: `/client/${id}`,
+                    body
+                }
+            }
+        }),
         clientStatistic: builder.query({
             query: () => {
                 return {
@@ -89,5 +105,6 @@ export const {
     useStatusMutation,
     useClientDetailsQuery,
     useClientStatisticQuery,
-    useActiveClientsQuery
+    useActiveClientsQuery,
+    useUpdateClientMutation
 } = clientSlice;
