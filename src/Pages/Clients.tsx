@@ -214,7 +214,7 @@ const Clients: React.FC = () => {
                                 />
                             </ConfigProvider>
 
-                            <ClientModal setOpen={setOpen} open={open} />
+                            <ClientModal setOpen={setOpen} open={open} refetch={refetch} />
                         </div>
                     )
             }

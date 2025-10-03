@@ -5,7 +5,7 @@ import { useAddClientMutation } from "../../redux/apiSlices/clientSlice";
 interface IClientModalProps {
     open: boolean;
     setOpen: (value: boolean) => void;
-    refetch?: () => void;
+    refetch: () => void;
 }
 
 const ClientModal: React.FC<IClientModalProps> = ({ open, setOpen, refetch }) => {
@@ -17,6 +17,7 @@ const ClientModal: React.FC<IClientModalProps> = ({ open, setOpen, refetch }) =>
         await addClient(values).unwrap().then(() => {
             form.resetFields();
             setOpen(false)
+            refetch();
         })
     };
 
