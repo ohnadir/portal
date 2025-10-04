@@ -6,7 +6,6 @@ import Credits from "../Pages/Credits";
 import Paid from "../Pages/Paid";
 import Account from "../Pages/Account";
 import ClientDetails from "../Pages/ClientDetails";
-import Auth from "../layouts/Auth/Auth";
 import Login from "../Pages/Auth/Login";
 import PrivateRoute from "./PrivateRoutes";
 import Transaction from "../Pages/Transactions";
