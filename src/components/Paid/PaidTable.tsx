@@ -25,7 +25,7 @@ const PaidTable: React.FC<IPaidTableProps> = ({ summaryRefetch }) => {
     const [page, setPage] = useState(1)
     const [open, setOpen] = useState<IClientProps | null>(null);
     const [creditOpen, setCreditOpen] = useState<IClientProps | null>(null);
-    const [clientStatus, setClientStatus] = useState<"active" | "inactive" | undefined>(undefined);
+    const [clientStatus, setClientStatus] = useState<"active" | "inactive" | undefined>("active");
     const [search, setSearch] = useState<string | undefined>("");
 
     const { data: clients, refetch } = useClientsQuery({ page, search, status: clientStatus });

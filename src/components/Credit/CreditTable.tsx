@@ -28,7 +28,7 @@ const CreditTable: React.FC<ICreditTableProps> = ({ summaryRefetch }) => {
     const [page, setPage] = useState(1);
     const [open, setOpen] = useState<ICreditProps | null>(null);
     const [paidOpen, setPaidOpen] = useState<ICreditProps | null>(null);
-    const [clientStatus, setClientStatus] = useState<"active" | "inactive" | undefined>(undefined);
+    const [clientStatus, setClientStatus] = useState<"active" | "inactive" | undefined>("active");
     const [search, setSearch] = useState<string | undefined>("");
 
     const { data: clients, isLoading, refetch } = useClientsQuery({ page, search, status: clientStatus });
