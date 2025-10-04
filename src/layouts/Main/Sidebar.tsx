@@ -51,7 +51,7 @@ const Sidebar: React.FC<ISidebarProps> = ({ setNavigationName }) => {
     ]
 
     const handleLogOut = () => {
-        navigate("/auth/login")
+        navigate("/auth")
         localStorage.removeItem("token")
     }
 
