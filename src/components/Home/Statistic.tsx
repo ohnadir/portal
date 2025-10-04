@@ -25,17 +25,7 @@ const Statistic: React.FC = () => {
                             </UsersRound>
                         }
                     />
-                    <div className='flex items-center justify-between mt-[15px]'>
-                        <div className='flex items-center gap-2'>
-                            <p className='text-[#606060]'>Total:</p>
-                            <p className='text-[24px] font-medium'>{summary?.totalClients}</p>
-                        </div>  
-                        <div className='flex items-center gap-2'>
-                            <p className='text-[#606060]'>Active:</p>
-                            <p className='text-[24px] font-medium'>{summary?.totalClient}</p>
-                        </div>
-
-                    </div>
+                    <p className='text-[24px] mt-3 font-medium'>{summary?.totalClient}</p>
                 </div>
 
                 <div className='rounded-[16px] p-3 bg-white' style={{ boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.16)" }}> 
@@ -55,17 +45,7 @@ const Statistic: React.FC = () => {
                             </CircleDollarSign>
                         }
                     />
-                    <div className='flex items-center justify-between mt-[15px]'>
-                        <div className='flex items-center gap-2'>
-                            <p className='text-[#606060]'>Today</p>
-                            <p className='text-[24px] font-medium'>{summary?.todayCredit}</p>
-                        </div>
-                        <div className='flex items-center gap-2'>
-                            <p className='text-[#606060]'>Total:</p>
-                            <p className='text-[24px] font-medium'>{summary?.totalCredit}</p>
-                        </div>
-
-                    </div>
+                    <p className='text-[24px]  mt-3 font-medium'>{summary?.totalCredit}</p>
                 </div>
 
                 <div className='rounded-[16px] p-3 bg-white'  style={{ boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.16)" }}> 
@@ -85,17 +65,7 @@ const Statistic: React.FC = () => {
                             </BanknoteArrowUp>
                         }
                     />
-                    <div className='flex items-center justify-between mt-[15px]' >
-                        <div className='flex items-center gap-2'>
-                            <p className='text-[#606060]'>Today:</p>
-                            <p className='text-[24px] font-medium'>{summary?.todayPaid}</p>
-                        </div>
-                        <div className='flex items-center gap-2'>
-                            <p className='text-[#606060]'>Total:</p>
-                            <p className='text-[24px] font-medium'>{summary?.totalPaid}</p>
-                        </div>
-
-                    </div>
+                    <p className='text-[24px] mt-3 font-medium'>{summary?.totalPaid}</p>
                 </div>
 
 
@@ -117,17 +87,7 @@ const Statistic: React.FC = () => {
                             </Info>
                         }
                     />
-                    <div className='flex items-center justify-between mt-[15px]'>
-                        <div className='flex items-center gap-2'>
-                            <p className='text-[#606060]'>Today:</p>
-                            <p className='text-[24px] text-red-700 font-medium'>{summary?.todayDue}</p>
-                        </div>
-                        <div className='flex items-center gap-2'>
-                            <p className='text-[#606060]'>Total:</p>
-                            <p className='text-[24px] text-red-700 font-medium'>{summary?.balance}</p>
-                        </div>
-
-                    </div>
+                    <p className='text-[24px] mt-3 text-red-700 font-medium'>{summary?.balance}</p>
                 </div>
             </div>
         </div>

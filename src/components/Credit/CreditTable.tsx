@@ -49,11 +49,6 @@ const CreditTable: React.FC<ICreditTableProps> = ({ summaryRefetch }) => {
             render: (_: string, _record: ICreditProps, index: number) => <p>{index + 1}</p>,
         },
         {
-            title: 'User Id',
-            dataIndex: 'userId',
-            key: 'userId',
-        },
-        {
             title: 'Client',
             dataIndex: 'client',
             key: 'client',
@@ -61,11 +56,6 @@ const CreditTable: React.FC<ICreditTableProps> = ({ summaryRefetch }) => {
                 <img width={35} height={35} src={_record.profile} alt="" />
                 <p>{_record.name}</p>
             </div>
-        },
-        {
-            title: 'Address',
-            dataIndex: 'address',
-            key: 'address',
         },
         {
             title: 'Credit',
@@ -94,8 +84,8 @@ const CreditTable: React.FC<ICreditTableProps> = ({ summaryRefetch }) => {
             key: 'actions',
             render: (_: string, _record: ICreditProps) =>
                 <div className='flex items-center gap-3'>
-                    <button onClick={() => setOpen(_record)} className='cursor-pointer bg-[#F57674] text-white px-3 py-1 rounded-[16px]'>Add Credit</button>
-                    <button onClick={() => setPaidOpen(_record)} className='cursor-pointer bg-[#F57674] text-white px-3 py-1 rounded-[16px]'>Add Paid</button>
+                    <button onClick={() => setOpen(_record)} className='cursor-pointer bg-gradient-to-r from-[#0058D4] to-[#3D8CFF] text-white px-3 py-1 rounded-[16px]'>Add Credit</button>
+                    <button onClick={() => setPaidOpen(_record)} className='cursor-pointer bg-gradient-to-r from-[#0058D4] to-[#3D8CFF] text-white px-3 py-1 rounded-[16px]'>Add Paid</button>
                 </div>
         },
     ];
@@ -110,7 +100,7 @@ const CreditTable: React.FC<ICreditTableProps> = ({ summaryRefetch }) => {
                     :
                     (
                         <div className='rounded-[16px] bg-white p-3 mt-3' style={{ boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.16)" }}>
-                            <div className='flex items-center justify-end mb-3 gap-3'>
+                            <div className='flex items-center justify-between mb-3'>
                                 <Input
                                     style={{ width: "335px", paddingLeft: 5, height: 44, borderRadius: 60, background: "white" }}
                                     placeholder="Search"
@@ -150,7 +140,12 @@ const CreditTable: React.FC<ICreditTableProps> = ({ summaryRefetch }) => {
                                         },
                                     }}
                                 >
-                                    <Select onChange={(value) => setClientStatus(value)} placeholder="Active" style={{ width: 130, height: 44, marginBottom: 0 }} >
+                                    <Select 
+                                        onChange={(value) => setClientStatus(value)} 
+                                        placeholder="Active" 
+                                        style={{ width: 130, height: 44, marginBottom: 0 }} 
+                                    >
+                                        <Select.Option value="">View All</Select.Option>
                                         <Select.Option value="active">Active</Select.Option>
                                         <Select.Option value="inactive">Inactive</Select.Option>
                                     </Select>

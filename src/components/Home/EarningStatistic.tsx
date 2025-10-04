@@ -65,7 +65,7 @@ const EarningStatistic: React.FC = () => {
                     <LineChart
                         data={statistic}
                         margin={{
-                            left: -6,
+                            left: 10,
                         }}
                     >
                         <XAxis dataKey="month" />

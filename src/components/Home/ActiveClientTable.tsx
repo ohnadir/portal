@@ -2,6 +2,7 @@ import { ConfigProvider, Select, Table, type TableColumnsType } from 'antd';
 import { Info } from 'lucide-react';
 import React from 'react';
 import { useActiveClientsQuery } from '../../redux/apiSlices/clientSlice';
+import { Link } from 'react-router-dom';
 
 interface IClientProps {
     _id: string;
@@ -10,7 +11,6 @@ interface IClientProps {
     totalCredit: number;
     totalPaid: number;
     createdAt: string;
-    userId: string;
     profile: string;
     status: "active" | "inactive"
 }
@@ -25,11 +25,6 @@ const ActiveClientTable: React.FC = () => {
                 render: (_: string, _record: IClientProps, index: number) => <p>{index + 1}</p>,
             },
             {
-                title: 'User Id',
-                dataIndex: 'userId',
-                key: 'userId',
-            },
-            {
                 title: 'Client',
                 dataIndex: 'client',
                 key: 'client',
@@ -37,11 +32,6 @@ const ActiveClientTable: React.FC = () => {
                     <img width={35} height={35} src={_record.profile} alt="" />
                     <p>{_record.name}</p>
                 </div>
-            },
-            {
-                title: 'Address',
-                dataIndex: 'address',
-                key: 'address',
             },
             {
                 title: 'Credit',
@@ -64,7 +54,9 @@ const ActiveClientTable: React.FC = () => {
                 dataIndex: 'actions',
                 key: 'actions',
                 render: (_: string, _record: IClientProps) => 
-                    <Info size={20} color='#606060' />
+                    <Link to={`/client-details/${_record._id}`}>
+                        <Info  size={24} color='#606060' />
+                    </Link>
             },
         ];
 

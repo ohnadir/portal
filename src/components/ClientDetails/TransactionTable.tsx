@@ -81,11 +81,6 @@ const TransactionTable: React.FC<ITransactionTableProps> = ({ transactions, pagi
 
         },
         {
-            title: "TRXID",
-            dataIndex: "txid",
-            key: "txid",
-        },
-        {
             title: "Date",
             dataIndex: "date",
             key: "date",

@@ -27,7 +27,7 @@ const Clients: React.FC = () => {
     const [page, setPage] = useState(1);
     const [open, setOpen] = useState(false);
     const [status] = useStatusMutation();
-    const [clientStatus, setClientStatus] = useState<"active" | "inactive" | undefined>(undefined);
+    const [clientStatus, setClientStatus] = useState<"active" | "inactive" | undefined>("active");
     const [search , setSearch] = useState<string | undefined>("");
     const [limit, setLimit] = useState(10);
     const { data: clients, isLoading, refetch } = useClientsQuery({page, search, status: clientStatus, limit});
@@ -54,12 +54,6 @@ const Clients: React.FC = () => {
             render: (_: string, _record: IClientProps, index: number) => <p>#{index + 1}</p>,
         },
         {
-            title: 'User ID',
-            dataIndex: 'userId',
-            key: 'userId',
-            render: (_: string, _record: IClientProps, _index: number) => <p>#{_record.userId}</p>,
-        },
-        {
             title: 'Client',
             dataIndex: 'client',
             key: 'client',
@@ -67,11 +61,6 @@ const Clients: React.FC = () => {
                 <img width={35} height={35} src={_record.profile} alt="" />
                 <p>{_record.name}</p>
             </div>
-        },
-        {
-            title: 'Address',
-            dataIndex: 'address',
-            key: 'address',
         },
         {
             title: 'Email',
@@ -162,7 +151,12 @@ const Clients: React.FC = () => {
                                         },
                                     }}
                                 >
-                                    <Select onChange={(value) => setClientStatus(value)} placeholder="Active" style={{ width: 130, height: 44, marginBottom: 0 }} >
+                                    <Select 
+                                        onChange={(value) => setClientStatus(value)} 
+                                        placeholder="Active" 
+                                        style={{ width: 130, height: 44, marginBottom: 0 }} 
+                                    >
+                                        <Select.Option value="">View All</Select.Option>
                                         <Select.Option value="active">Active</Select.Option>
                                         <Select.Option value="inactive">Inactive</Select.Option>
                                     </Select>
