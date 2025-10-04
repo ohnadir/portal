@@ -55,11 +55,6 @@ const PaidTable: React.FC<IPaidTableProps> = ({ summaryRefetch }) => {
             </div>
         },
         {
-            title: 'Contact',
-            dataIndex: 'contact',
-            key: 'contact',
-        },
-        {
             title: 'Credit',
             dataIndex: 'totalCredit',
             key: 'totalCredit',
