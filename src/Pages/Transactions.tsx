@@ -1,4 +1,4 @@
-import { ConfigProvider, Input, Select, Table } from 'antd';
+import { ConfigProvider, DatePicker, Input, Select, Table } from 'antd';
 import { FileText, PencilLine, Trash2 } from 'lucide-react';
 import moment from 'moment';
 import React, { useState } from 'react';
@@ -16,6 +16,7 @@ interface ITransactionProps {
     createdAt: string;
     paid: string;
     credit: string;
+    notes?: string;
     balance: string;
     type: "credit" | "paid";
     amount: number;
@@ -24,7 +25,7 @@ interface ITransactionProps {
 const Transaction: React.FC = () => {
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
-    const [date, setDate] = useState('');
+    const [date, setDate] = useState<string | undefined>(undefined);
     const [open, setOpen] = useState<ITransactionProps | undefined>(undefined);
     const [deleteTransaction] = useDeleteTransactionMutation();
     const [client, setClient] = useState<string | undefined>(undefined);
@@ -32,6 +33,8 @@ const Transaction: React.FC = () => {
     const { data: transactions, isLoading, refetch } = useTransactionsQuery({ page, type, date, client, limit });
     const { data: clients } = useClientsQuery({});
     const itemsPerPage = 10;
+
+    console.log(date);
 
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
@@ -78,17 +81,17 @@ const Transaction: React.FC = () => {
 
         },
         {
-            title: "TRXID",
-            dataIndex: "txid",
-            key: "txid",
-        },
-        {
             title: "Date",
             dataIndex: "date",
             key: "date",
             render: (_: string, value: ITransactionProps) => (
                 <span>{moment(value?.createdAt).format("MMM DD H:mm A")}</span>
             ),
+        },
+        {
+            title: "Notes",
+            dataIndex: "notes",
+            key: "notes",
         },
         {
             title: 'Client',
@@ -172,9 +175,11 @@ const Transaction: React.FC = () => {
                                         theme={{
                                             components: {
                                                 Select: {
-                                                    colorBgBase: "#F1F1F1",
-                                                    colorBgContainer: "#F1F1F1",
+                                                    colorBgBase: "transparent",
+                                                    colorBgContainer: "transparent",
                                                     borderRadius: 24,
+                                                    colorTextBase: "black",
+                                                    colorTextPlaceholder: "black",
                                                     activeBorderColor: "none",
                                                     activeOutlineColor: "none",
                                                     hoverBorderColor: "none"
@@ -187,11 +192,11 @@ const Transaction: React.FC = () => {
                                             },
                                         }}
                                     >
-                                        <Select 
-                                            onChange={(value) => setType(value)} 
-                                            placeholder="Type" 
-                                            style={{ width: 160, height: 44, marginBottom: 0 }} 
-                                            >
+                                        <Select
+                                            onChange={(value) => setType(value)}
+                                            placeholder="Type"
+                                            style={{ width: 160, height: 44, marginBottom: 0 }}
+                                        >
                                             {
                                                 [
                                                     { value: "", label: "View All" },
@@ -207,9 +212,11 @@ const Transaction: React.FC = () => {
                                         theme={{
                                             components: {
                                                 Select: {
-                                                    colorBgBase: "#F1F1F1",
-                                                    colorBgContainer: "#F1F1F1",
+                                                    colorBgBase: "transparent",
+                                                    colorBgContainer: "transparent",
                                                     borderRadius: 24,
+                                                    colorTextBase: "black",
+                                                    colorTextPlaceholder: "black",
                                                     activeBorderColor: "none",
                                                     activeOutlineColor: "none",
                                                     hoverBorderColor: "none"
@@ -231,19 +238,43 @@ const Transaction: React.FC = () => {
                                             }
                                         </Select>
                                     </ConfigProvider>
-                                    <Input
-                                        type='date'
-                                        defaultValue={new Date().toISOString().split("T")[0]}
-                                        onChange={(e) => setDate(e.target.value)}
-                                        value={date}
-                                        style={{
-                                            width: 150,
-                                            paddingLeft: 12,
-                                            height: 44,
-                                            borderRadius: 60,
-                                            background: "white"
+                                    <ConfigProvider
+                                        theme={{
+                                            token: {
+                                                colorTextPlaceholder: "black"
+                                            }
                                         }}
-                                    />
+                                    >
+                                        <DatePicker
+                                            placeholder="From Date"
+                                            style={{
+                                                width: 150,
+                                                height: 44,
+                                                borderRadius: 60,
+                                                background: "white",
+                                            }}
+                                            onChange={(date, dateString) => setDate(dateString.toString())}
+                                        />
+                                    </ConfigProvider>
+
+                                    <ConfigProvider
+                                        theme={{
+                                            token: {
+                                                colorTextPlaceholder: "black"
+                                            }
+                                        }}
+                                    >
+                                        <DatePicker
+                                            placeholder="To Date"
+                                            style={{
+                                                width: 150,
+                                                height: 44,
+                                                borderRadius: 60,
+                                                background: "white",
+                                            }}
+                                            onChange={(date, dateString) => setDate(dateString.toString())}
+                                        />
+                                    </ConfigProvider>
                                 </div>
                             </div>
 

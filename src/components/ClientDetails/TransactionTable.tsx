@@ -1,4 +1,4 @@
-import { Input, Table } from 'antd';
+import { ConfigProvider, DatePicker, Input, Table } from 'antd';
 import { FileText, PencilLine, Search, Trash2 } from 'lucide-react';
 import moment from 'moment';
 import React, { useState } from 'react';
@@ -14,6 +14,7 @@ interface ITransactionProps {
     paid: string;
     balance: string;
     credit: string;
+    notes?: string;
     type: "credit" | "paid";
     amount: number;
 }
@@ -87,6 +88,11 @@ const TransactionTable: React.FC<ITransactionTableProps> = ({ transactions, pagi
             render: (_: string, value: ITransactionProps) => (
                 <span>{moment(value?.createdAt).format("MMM DD H:mm A")}</span>
             ),
+        },
+        {
+            title: "Notes",
+            dataIndex: "notes",
+            key: "notes",
         },
         {
             title: "Type",
@@ -168,19 +174,42 @@ const TransactionTable: React.FC<ITransactionTableProps> = ({ transactions, pagi
                             </div>
                         }
                     />
-                    <Input
-                        type='date'
-                        defaultValue={new Date().toISOString().split("T")[0]}
-                        onChange={(e) => setDate(e.target.value)}
-                        value={date}
-                        style={{
-                            width: 150,
-                            paddingLeft: 12,
-                            height: 44,
-                            borderRadius: 60,
-                            background: "white"
+                    <ConfigProvider
+                        theme={{
+                            token: {
+                                colorTextPlaceholder: "black"
+                            }
                         }}
-                    />
+                    >
+                        <DatePicker
+                            placeholder="From Date"
+                            style={{
+                                width: 150,
+                                height: 44,
+                                borderRadius: 60,
+                                background: "white",
+                            }}
+                            onChange={(date, dateString) => setDate(dateString.toString())}
+                        />
+                    </ConfigProvider>
+                    <ConfigProvider
+                        theme={{
+                            token: {
+                                colorTextPlaceholder: "black"
+                            }
+                        }}
+                    >
+                        <DatePicker
+                            placeholder="To Date"
+                            style={{
+                                width: 150,
+                                height: 44,
+                                borderRadius: 60,
+                                background: "white",
+                            }}
+                            onChange={(date, dateString) => setDate(dateString.toString())}
+                        />
+                    </ConfigProvider>
                 </div>
             </div>
 

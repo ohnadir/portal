@@ -48,7 +48,7 @@ const CreditModal: React.FC<ICreditModalProps> = ({ open, setOpen, refetch, summ
                         className="col-span-12"
                         style={{ marginBottom: 0 }}
                         label={<p className='text-[#636363] text-[16px] leading-[24px]'>Description</p>}
-                        name="description"
+                        name="notes"
                     >
                         <Input
                             placeholder='Any note do you have?'
