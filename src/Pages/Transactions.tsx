@@ -1,4 +1,5 @@
-import { ConfigProvider, DatePicker, Input, Select, Table } from 'antd';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ConfigProvider, DatePicker, Select, Table } from 'antd';
 import { FileText, PencilLine, Trash2 } from 'lucide-react';
 import moment from 'moment';
 import React, { useState } from 'react';
@@ -97,7 +98,7 @@ const Transaction: React.FC = () => {
             title: 'Client',
             dataIndex: 'client',
             key: 'client',
-            render: (_: string, _record: ITransactionProps, _index: number) => <div className='flex items-center gap-2'>
+            render: (_: string, _record: ITransactionProps) => <div className='flex items-center gap-2'>
                 <img width={35} height={35} src={(_record?.client as any)?.profile} alt="" />
                 <p>{(_record?.client as any)?.name}</p>
             </div>
@@ -253,7 +254,7 @@ const Transaction: React.FC = () => {
                                                 borderRadius: 60,
                                                 background: "white",
                                             }}
-                                            onChange={(date, dateString) => setDate(dateString.toString())}
+                                            onChange={(_date, dateString) => setDate(dateString.toString())}
                                         />
                                     </ConfigProvider>
 
@@ -272,7 +273,7 @@ const Transaction: React.FC = () => {
                                                 borderRadius: 60,
                                                 background: "white",
                                             }}
-                                            onChange={(date, dateString) => setDate(dateString.toString())}
+                                            onChange={(_date, dateString) => setDate(dateString.toString())}
                                         />
                                     </ConfigProvider>
                                 </div>

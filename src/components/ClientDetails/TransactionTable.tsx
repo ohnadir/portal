@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ConfigProvider, DatePicker, Input, Table } from 'antd';
 import { FileText, PencilLine, Search, Trash2 } from 'lucide-react';
 import moment from 'moment';
@@ -40,7 +41,7 @@ interface ITransactionTableProps {
     setSearchTerm: (value: string) => void;
 }
 
-const TransactionTable: React.FC<ITransactionTableProps> = ({ transactions, pagination, refetch, setPage, page, totalCredit, totalPaid, date, balance, setDate, setSearchTerm }) => {
+const TransactionTable: React.FC<ITransactionTableProps> = ({ transactions, pagination, refetch, setPage, page, totalCredit, totalPaid, balance, setDate, setSearchTerm }) => {
     const [open, setOpen] = useState<ITransactionProps | null>(null);
     const [deleteTransaction] = useDeleteTransactionMutation();
     const itemsPerPage = 10;
@@ -189,7 +190,7 @@ const TransactionTable: React.FC<ITransactionTableProps> = ({ transactions, pagi
                                 borderRadius: 60,
                                 background: "white",
                             }}
-                            onChange={(date, dateString) => setDate(dateString.toString())}
+                            onChange={(_date, dateString) => setDate(dateString.toString())}
                         />
                     </ConfigProvider>
                     <ConfigProvider
@@ -207,7 +208,7 @@ const TransactionTable: React.FC<ITransactionTableProps> = ({ transactions, pagi
                                 borderRadius: 60,
                                 background: "white",
                             }}
-                            onChange={(date, dateString) => setDate(dateString.toString())}
+                            onChange={(_date, dateString) => setDate(dateString.toString())}
                         />
                     </ConfigProvider>
                 </div>
