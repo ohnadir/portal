@@ -8,6 +8,7 @@ import { useDeleteTransactionMutation, useTransactionsQuery } from '../redux/api
 import Logo from "../assets/logo.png";
 import UpdateTransactionModal from '../components/modal/UpdateTransactionModal';
 import { useClientsQuery } from '../redux/apiSlices/clientSlice';
+import PdfGenerator from '../util/PdfGenerator';
 
 
 interface ITransactionProps {
@@ -34,8 +35,6 @@ const Transaction: React.FC = () => {
     const { data: transactions, isLoading, refetch } = useTransactionsQuery({ page, type, date, client, limit });
     const { data: clients } = useClientsQuery({});
     const itemsPerPage = 10;
-
-    console.log(date);
 
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
@@ -298,6 +297,11 @@ const Transaction: React.FC = () => {
                                 className="shadow-md"
                             />
                             <UpdateTransactionModal open={open} setOpen={setOpen} refetch={refetch} />
+                            {
+                                selectedRowKeys?.length > 0 && (
+                                    <PdfGenerator />
+                                )
+                            }
                         </div>
                     )
             }

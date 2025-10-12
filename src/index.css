@@ -6,6 +6,10 @@ body {
   font-family: 'Poppins', sans-serif;
 }
 
+button {
+  cursor: pointer;
+}
+
 
 /* custom style css for ant design side menu */
 .ant-menu-light.ant-menu-root.ant-menu-inline {

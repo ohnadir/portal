@@ -9,7 +9,7 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const { data: profile, isLoading, isFetching, isError } = useProfileQuery(undefined);
 
   if (isLoading || isFetching) {
-    return <div className='w-full h-full flex items-center justify-center'>
+    return <div className='w-full h-dvh flex items-center justify-center'>
       <img src={Logo} alt="" className="w-[140px] h-[50px] mx-auto mb-5" />
     </div>
   }
