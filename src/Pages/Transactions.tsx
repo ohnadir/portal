@@ -36,12 +36,14 @@ const Transaction: React.FC = () => {
     const { data: clients } = useClientsQuery({});
     const itemsPerPage = 10;
 
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+    const [selectedValues, setSelectedValues] = useState<ITransactionProps[]>([]);
 
     const rowSelection = {
         selectedRowKeys,
-        onChange: (e: any) => {
-            setSelectedRowKeys(e);
+        onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
+            setSelectedValues(selectedRows);
+            setSelectedRowKeys(selectedRowKeys);
         }
     };
 
@@ -299,7 +301,7 @@ const Transaction: React.FC = () => {
                             <UpdateTransactionModal open={open} setOpen={setOpen} refetch={refetch} />
                             {
                                 selectedRowKeys?.length > 0 && (
-                                    <PdfGenerator />
+                                    <PdfGenerator data={selectedValues} page={page} itemsPerPage={itemsPerPage} />
                                 )
                             }
                         </div>

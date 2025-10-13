@@ -1,9 +1,23 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import jsPDF from "jspdf";
 import html2canvas from 'html2canvas-pro';
 import { Table } from "antd";
-import Logo from "../assets/credit-manager.png";
+import moment from 'moment';
 
-const PdfGenerator = () => {
+interface ITransactionProps {
+    _id: string;
+    key: string;
+    client: object;
+    createdAt: string;
+    paid: string;
+    credit: string;
+    notes?: string;
+    balance: string;
+    type: "credit" | "paid";
+    amount: number;
+}
+
+const PdfGenerator = ({ page, itemsPerPage, data }: { page: number; itemsPerPage: number; data: ITransactionProps[] }) => {
     const downloadPDF = () => {
         const table = document.getElementById("table-to-print");
         if (!table) {
@@ -22,44 +36,55 @@ const PdfGenerator = () => {
 
     const columns = [
         {
-            title: 'Name',
-            dataIndex: 'name',
-        },
-        {
-            title: 'Age',
-            dataIndex: 'age',
-        },
-        {
-            title: 'Address',
-            dataIndex: 'address',
-        },
-    ];
+            title: "SL",
+            dataIndex: "sno",
+            key: "sno",
+            render: (_: string, _record: ITransactionProps, index: number) => <p>{((page - 1) * itemsPerPage) + index + 1}</p>
 
-    const data = [
-        {
-            key: '1',
-            name: 'John Brown',
-            age: 32,
-            address: 'New York No. 1 Lake Park',
         },
         {
-            key: '2',
-            name: 'Jim Green',
-            age: 42,
-            address: 'London No. 1 Lake Park',
+            title: "Date",
+            dataIndex: "date",
+            key: "date",
+            render: (_: string, value: ITransactionProps) => (
+                <span>{moment(value?.createdAt).format("MMM DD H:mm A")}</span>
+            ),
         },
         {
-            key: '3',
-            name: 'Joe Black',
-            age: 32,
-            address: 'Sydney No. 1 Lake Park',
+            title: "Notes",
+            dataIndex: "notes",
+            key: "notes",
         },
         {
-            key: '4',
-            name: 'Disabled User',
-            age: 99, 
-            address: 'Sydney No. 1 Lake Park',
+            title: 'User',
+            dataIndex: 'client',
+            key: 'client',
+            render: (_: string, _record: ITransactionProps) => <p>{(_record?.client as any)?.name}</p>
         },
+        {
+            title: "Credit",
+            dataIndex: "credit",
+            key: "credit",
+            render: (_: string, value: ITransactionProps) => (
+                <span className="text-black">{value?.type === "credit" ? value?.amount : 0}</span>
+            ),
+        },
+        {
+            title: "Paid",
+            dataIndex: "paid",
+            key: "paid",
+            render: (_: string, value: ITransactionProps) => (
+                <span className="text-black">{value?.type === "paid" ? value?.amount : 0}</span>
+            ),
+        },
+        {
+            title: "Balance",
+            dataIndex: "balance",
+            key: "balance",
+            render: (_: string, value: ITransactionProps) => (
+                <span className="text-black">{value?.balance}</span>
+            ),
+        }
     ];
 
 
@@ -73,18 +98,13 @@ const PdfGenerator = () => {
             </button>
 
             <div id="table-to-print" >
-                <div className="p-4 border border-red-400 bg-[url(/public/credit-manager.png)] bg-cover">
-                    
-                    <div className="space-y-2 py-10">
-                        <img src={Logo} alt="" />
-                        <div>
-                            <p>{new Date().toLocaleDateString()}</p>
-                        </div>
-                    </div>
-
+                <div className="p-4">
                     <Table
                         columns={columns}
-                        dataSource={data}
+                        dataSource={data?.map((item, index) => ({
+                            ...item,
+                            sno: index + 1
+                        }))}
                         pagination={false}
                         bordered
                     />
