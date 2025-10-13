@@ -299,11 +299,12 @@ const Transaction: React.FC = () => {
                                 className="shadow-md"
                             />
                             <UpdateTransactionModal open={open} setOpen={setOpen} refetch={refetch} />
-                            {
-                                selectedRowKeys?.length > 0 && (
-                                    <PdfGenerator data={selectedValues} page={page} itemsPerPage={itemsPerPage} />
-                                )
-                            }
+                            {selectedRowKeys.length > 0 && (
+                                <div className="flex justify-end mt-4">
+                                    <PdfGenerator data={selectedValues} />
+                                </div>
+                            )}
+
                         </div>
                     )
             }

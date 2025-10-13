@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import jsPDF from "jspdf";
-import html2canvas from 'html2canvas-pro';
-import { Table } from "antd";
-import moment from 'moment';
+import autoTable from "jspdf-autotable";
+import moment from "moment";
 
 interface ITransactionProps {
     _id: string;
@@ -17,100 +16,70 @@ interface ITransactionProps {
     amount: number;
 }
 
-const PdfGenerator = ({ page, itemsPerPage, data }: { page: number; itemsPerPage: number; data: ITransactionProps[] }) => {
+const PdfGenerator = ({ data }: { data: ITransactionProps[] }) => {
     const downloadPDF = () => {
-        const table = document.getElementById("table-to-print");
-        if (!table) {
-            console.error("Table element not found!");
-            return;
-        }
-        html2canvas(table, { scale: 2 }).then((canvas) => {
-            const imgData = canvas.toDataURL("image/png");
-            const pdf = new jsPDF("p", "mm", "a4");
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-            pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-            pdf.save("table-data.pdf");
+        const doc = new jsPDF();
+
+        doc.text("Transaction Report", 14, 15);
+        doc.setFontSize(10);
+        doc.text(`Generated: ${moment().format("MMMM Do YYYY, h:mm:ss a")}`, 14, 22);
+
+        const tableData = data.map((item: ITransactionProps, index) => [
+            index + 1,
+            moment(item.createdAt).format("MMM DD, h:mm A"),
+            item.notes || "-",
+            (item.client as any)?.name || "-",
+            item.type === "credit" ? item.amount : 0,
+            item.type === "paid" ? item.amount : 0,
+            parseFloat(item.balance) || 0 
+        ]);
+
+        const totalCredit = tableData.reduce((sum, row) => sum + (row[4] as number), 0); // Sum Credit column (index 4)
+        const totalPaid = tableData.reduce((sum, row) => sum + (row[5] as number), 0); // Sum Paid column (index 5)
+        const totalBalance = tableData.reduce((sum, row) => sum + (row[6] as number), 0); // Sum Balance column (index 6)
+
+        autoTable(doc, {
+            startY: 30,
+            head: [["SL", "Date", "Notes", "Client", "Credit", "Paid", "Balance"]],
+            body: tableData,
+            theme: 'grid',
+            foot: [
+                ["", "", "", "", totalCredit, totalPaid, totalBalance]
+            ],
+            styles: {
+                fillColor: false,
+                lineColor: [0, 0, 0],
+                lineWidth: 0.1,
+                fontSize: 8,
+                cellPadding: 2,
+                halign: 'left',
+            },
+            headStyles: {
+                fillColor: false,
+                textColor: [0, 0, 0],
+            },
+            bodyStyles: {
+                fillColor: false,
+                textColor: [0, 0, 0],
+            },
+            footStyles: {
+                fillColor: false,
+                textColor: [0, 0, 0],
+                fontStyle: 'bold',
+                halign: 'left',
+            },
         });
+
+        doc.save("transactions.pdf");
     };
 
-    const columns = [
-        {
-            title: "SL",
-            dataIndex: "sno",
-            key: "sno",
-            render: (_: string, _record: ITransactionProps, index: number) => <p>{((page - 1) * itemsPerPage) + index + 1}</p>
-
-        },
-        {
-            title: "Date",
-            dataIndex: "date",
-            key: "date",
-            render: (_: string, value: ITransactionProps) => (
-                <span>{moment(value?.createdAt).format("MMM DD H:mm A")}</span>
-            ),
-        },
-        {
-            title: "Notes",
-            dataIndex: "notes",
-            key: "notes",
-        },
-        {
-            title: 'User',
-            dataIndex: 'client',
-            key: 'client',
-            render: (_: string, _record: ITransactionProps) => <p>{(_record?.client as any)?.name}</p>
-        },
-        {
-            title: "Credit",
-            dataIndex: "credit",
-            key: "credit",
-            render: (_: string, value: ITransactionProps) => (
-                <span className="text-black">{value?.type === "credit" ? value?.amount : 0}</span>
-            ),
-        },
-        {
-            title: "Paid",
-            dataIndex: "paid",
-            key: "paid",
-            render: (_: string, value: ITransactionProps) => (
-                <span className="text-black">{value?.type === "paid" ? value?.amount : 0}</span>
-            ),
-        },
-        {
-            title: "Balance",
-            dataIndex: "balance",
-            key: "balance",
-            render: (_: string, value: ITransactionProps) => (
-                <span className="text-black">{value?.balance}</span>
-            ),
-        }
-    ];
-
-
     return (
-        <div>
-            <button
-                onClick={downloadPDF}
-                className="bg-blue-500 text-white px-3 py-2 rounded"
-            >
-                Download PDF
-            </button>
-
-            <div id="table-to-print" >
-                <div className="p-4">
-                    <Table
-                        columns={columns}
-                        dataSource={data?.map((item, index) => ({
-                            ...item,
-                            sno: index + 1
-                        }))}
-                        pagination={false}
-                        bordered
-                    />
-                </div>
-            </div>
-        </div>
+        <button
+            onClick={downloadPDF}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md shadow hover:bg-blue-600"
+        >
+            Download PDF
+        </button>
     );
 };
 
