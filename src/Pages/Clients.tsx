@@ -1,12 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ConfigProvider, Input, Select, Switch, Table, type TableColumnsType } from 'antd';
-import { File, Info, Lock, LockOpen, Plus, Search } from 'lucide-react';
+import { Info, Lock, LockOpen, Plus, Search } from 'lucide-react';
 import React, { useState } from 'react';
 import Logo from "../assets/logo.png";
 import { useClientsQuery, useStatusMutation } from '../redux/apiSlices/clientSlice';
 import ClientModal from '../components/Clients/ClientModal';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
+import ClientPDFGenerator from '../util/ClientPDFGenerator';
 
 interface IClientProps {
     _id: string;
@@ -28,15 +30,18 @@ const Clients: React.FC = () => {
     const [open, setOpen] = useState(false);
     const [status] = useStatusMutation();
     const [clientStatus, setClientStatus] = useState<"active" | "inactive" | undefined>("active");
-    const [search , setSearch] = useState<string | undefined>("");
+    const [search, setSearch] = useState<string | undefined>("");
     const [limit, setLimit] = useState(10);
-    const { data: clients, isLoading, refetch } = useClientsQuery({page, search, status: clientStatus, limit});
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const { data: clients, isLoading, refetch } = useClientsQuery({ page, search, status: clientStatus, limit });
+
+    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+    const [selectedValues, setSelectedValues] = useState<IClientProps[]>([]);
 
     const rowSelection = {
         selectedRowKeys,
-        onChange: (e: any) => {
-            setSelectedRowKeys(e);
+        onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
+            setSelectedValues(selectedRows);
+            setSelectedRowKeys(selectedRowKeys);
         }
     };
 
@@ -51,7 +56,7 @@ const Clients: React.FC = () => {
             title: 'S.No.',
             dataIndex: 'name',
             key: 'name',
-            render: (_: string, _record: IClientProps, index: number) => <p>#{index + 1}</p>,
+            render: (_: string, _record: IClientProps, index: number) => <p>{index + 1}</p>,
         },
         {
             title: 'Client',
@@ -90,7 +95,7 @@ const Clients: React.FC = () => {
             render: (_: string, _record: IClientProps) =>
                 <div className='flex item-center gap-3'>
                     <Link to={`/client-details/${_record._id}`}>
-                        <Info  size={24} color='#606060' />
+                        <Info size={24} color='#606060' />
                     </Link>
                     <Switch onChange={() => onChange(_record._id)} value={_record.status === "active" ? true : false} className='custom-switch' />
                 </div>
@@ -109,9 +114,14 @@ const Clients: React.FC = () => {
                         <div className='rounded-[16px] bg-white p-3' style={{ boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.16)" }}>
 
                             <div className='flex items-center justify-end gap-4 mb-[20px]'>
-                                <File size={24} color='#A1A1A1' />
+                                {selectedRowKeys.length > 0 && (
+                                    <div>
+                                        <ClientPDFGenerator data={selectedValues} />
+                                    </div>
+                                )}
                                 <Lock size={24} color='#A1A1A1' />
                                 <LockOpen size={24} color='#A1A1A1' />
+
                                 <Input
                                     style={{ width: "335px", paddingLeft: 5, height: 44, borderRadius: 60, background: "white" }}
                                     placeholder="Search"
@@ -151,10 +161,10 @@ const Clients: React.FC = () => {
                                         },
                                     }}
                                 >
-                                    <Select 
-                                        onChange={(value) => setClientStatus(value)} 
-                                        placeholder="Active" 
-                                        style={{ width: 130, height: 44, marginBottom: 0 }} 
+                                    <Select
+                                        onChange={(value) => setClientStatus(value)}
+                                        placeholder="Active"
+                                        style={{ width: 130, height: 44, marginBottom: 0 }}
                                     >
                                         <Select.Option value="">View All</Select.Option>
                                         <Select.Option value="active">Active</Select.Option>

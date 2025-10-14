@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ConfigProvider, DatePicker, Select, Table } from 'antd';
-import { FileText, PencilLine, Trash2 } from 'lucide-react';
+import { PencilLine, Trash2 } from 'lucide-react';
 import moment from 'moment';
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
@@ -172,7 +172,11 @@ const Transaction: React.FC = () => {
                                     </div>
                                 </div>
                                 <div className='flex items-center justify-end gap-4'>
-                                    <FileText size={20} color='blue' />
+                                    {selectedRowKeys.length > 0 && (
+                                        <div>
+                                            <PdfGenerator data={selectedValues} />
+                                        </div>
+                                    )}
                                     <ConfigProvider
                                         theme={{
                                             components: {
@@ -299,12 +303,6 @@ const Transaction: React.FC = () => {
                                 className="shadow-md"
                             />
                             <UpdateTransactionModal open={open} setOpen={setOpen} refetch={refetch} />
-                            {selectedRowKeys.length > 0 && (
-                                <div className="flex justify-end mt-4">
-                                    <PdfGenerator data={selectedValues} />
-                                </div>
-                            )}
-
                         </div>
                     )
             }

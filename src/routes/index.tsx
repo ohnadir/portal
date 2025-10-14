@@ -4,7 +4,7 @@ import Home from "../Pages/Home";
 import Clients from "../Pages/Clients";
 import Credits from "../Pages/Credits";
 import Paid from "../Pages/Paid";
-import Account from "../Pages/Account";
+import Profile from "../Pages/Profile";
 import ClientDetails from "../Pages/ClientDetails";
 import Login from "../Pages/Auth/Login";
 import PrivateRoute from "./PrivateRoutes";
@@ -37,7 +37,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/account-settings",
-                element: <Account/>
+                element: <Profile/>
             },
             {
                 path: "/client-details/:id",

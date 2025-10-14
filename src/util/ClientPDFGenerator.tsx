@@ -4,48 +4,44 @@ import autoTable from "jspdf-autotable";
 import moment from "moment";
 import Icon from "../assets/pdf-icon.png";
 
-interface ITransactionProps {
+interface IClientProps {
     _id: string;
     key: string;
-    client: object;
-    createdAt: string;
-    paid: string;
-    credit: string;
-    notes?: string;
+    name: string;
+    email: string;
+    contact: string;
     balance: string;
-    type: "credit" | "paid";
-    amount: number;
+    createdAt: string;
+    status: "active" | "inactive"
 }
 
-const PdfGenerator = ({ data }: { data: ITransactionProps[] }) => {
+const ClientPDFGenerator = ({ data }: { data: IClientProps[] }) => {
     const downloadPDF = () => {
         const doc = new jsPDF();
 
-        doc.text("Transaction Report", 14, 15);
+        doc.text("Client Report", 14, 15);
         doc.setFontSize(10);
         doc.text(`Generated: ${moment().format("MMMM Do YYYY, h:mm:ss a")}`, 14, 22);
 
-        const tableData = data.map((item: ITransactionProps, index) => [
+        const tableData = data.map((item: IClientProps, index) => [
             index + 1,
+            item.name || "-",
+            item.email || "-",
+            item.contact || "-",
             moment(item.createdAt).format("MMM DD, h:mm A"),
-            item.notes || "-",
-            (item.client as any)?.name || "-",
-            item.type === "credit" ? item.amount : 0,
-            item.type === "paid" ? item.amount : 0,
-            parseFloat(item.balance) || 0
+            parseFloat(item.balance) || 0,
+            item.status
         ]);
 
-        const totalCredit = tableData.reduce((sum, row) => sum + (row[4] as number), 0);
-        const totalPaid = tableData.reduce((sum, row) => sum + (row[5] as number), 0);
-        const totalBalance = tableData.reduce((sum, row) => sum + (row[6] as number), 0);
+        const totalBalance = tableData.reduce((sum, row) => sum + (row[5] as number), 0);
 
         autoTable(doc, {
             startY: 30,
-            head: [["SL", "Date", "Notes", "Client", "Credit", "Paid", "Balance"]],
+            head: [["SL", "Client", "Email", "Contact", "Joining Date", "Balance", "Status"]],
             body: tableData,
             theme: 'grid',
             foot: [
-                ["", "", "", "", totalCredit, totalPaid, totalBalance]
+                ["", "", "", "", "", totalBalance, ""]
             ],
             styles: {
                 fillColor: false,
@@ -70,7 +66,7 @@ const PdfGenerator = ({ data }: { data: ITransactionProps[] }) => {
                 halign: 'left',
             },
         });
-        doc.save("transactions.pdf");
+        doc.save("clients.pdf");
     };
 
     return (
@@ -84,4 +80,4 @@ const PdfGenerator = ({ data }: { data: ITransactionProps[] }) => {
     );
 };
 
-export default PdfGenerator;
+export default ClientPDFGenerator;

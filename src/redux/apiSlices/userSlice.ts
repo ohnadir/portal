@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { api } from "../api/baseApi";
 
 const userSlice = api.injectEndpoints({
@@ -10,6 +11,21 @@ const userSlice = api.injectEndpoints({
                     body: data
                 }
             }
+        }),
+        updatePassword: builder.mutation({
+            query: (data) => {
+                return{
+                    method: "POST",
+                    url: "/auth/change-password",
+                    body: data
+                }
+            },
+            transformResponse: (response: any) => {
+                return response.data;
+            },
+            transformErrorResponse: (response: any) => {
+                return response.data;
+            },
         }),
         profile: builder.query({
             query: () => {
@@ -29,5 +45,6 @@ const userSlice = api.injectEndpoints({
 
 export const {
     useLoginMutation,
+    useUpdatePasswordMutation,
     useProfileQuery,
 } = userSlice;
