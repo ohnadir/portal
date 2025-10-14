@@ -3,7 +3,8 @@ import React, { useState } from 'react'
 import { useClientsQuery } from '../../redux/apiSlices/clientSlice';
 import PaidModal from '../modal/PaidModal';
 import CreditModal from '../modal/CreditModal';
-import { Search } from 'lucide-react';
+import { Info, Search } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface IPaidTableProps {
     summaryRefetch: () => void;
@@ -81,6 +82,9 @@ const PaidTable: React.FC<IPaidTableProps> = ({ summaryRefetch }) => {
             key: 'actions',
             render: (_: string, _record: IClientProps) =>
                 <div className='flex items-center gap-3'>
+                    <Link to={`/client-details/${_record?._id}`}>
+                        <Info size={24} color='#606060' />
+                    </Link>
                     <button onClick={() => setCreditOpen(_record)} className='cursor-pointer bg-gradient-to-r from-[#0058D4] to-[#3D8CFF] text-white px-3 py-1 rounded-[16px]'>Add Credit</button>
                     <button onClick={() => setOpen(_record)} className='cursor-pointer bg-gradient-to-r from-[#0058D4] to-[#3D8CFF] text-white px-3 py-1 rounded-[16px]'>Add Paid</button>
                 </div>
@@ -129,10 +133,10 @@ const PaidTable: React.FC<IPaidTableProps> = ({ summaryRefetch }) => {
                         },
                     }}
                 >
-                    <Select 
-                        onChange={(value) => setClientStatus(value)} 
-                        placeholder="Active" 
-                        style={{ width: 130, height: 44, marginBottom: 0 }} 
+                    <Select
+                        onChange={(value) => setClientStatus(value)}
+                        placeholder="Active"
+                        style={{ width: 130, height: 44, marginBottom: 0 }}
                     >
                         <Select.Option value="">View All</Select.Option>
                         <Select.Option value="active">Active</Select.Option>

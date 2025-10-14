@@ -6,7 +6,8 @@ import { useClientsQuery } from '../../redux/apiSlices/clientSlice';
 import Logo from "../../assets/logo.png";
 import CreditModal from '../modal/CreditModal';
 import PaidModal from '../modal/PaidModal';
-import { Search } from 'lucide-react';
+import { Info, Search } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface ICreditProps {
     _id: string;
@@ -85,6 +86,9 @@ const CreditTable: React.FC<ICreditTableProps> = ({ summaryRefetch }) => {
             key: 'actions',
             render: (_: string, _record: ICreditProps) =>
                 <div className='flex items-center gap-3'>
+                    <Link to={`/client-details/${_record?._id}`}>
+                        <Info size={24} color='#606060' />
+                    </Link>
                     <button onClick={() => setOpen(_record)} className='cursor-pointer bg-gradient-to-r from-[#0058D4] to-[#3D8CFF] text-white px-3 py-1 rounded-[16px]'>Add Credit</button>
                     <button onClick={() => setPaidOpen(_record)} className='cursor-pointer bg-gradient-to-r from-[#0058D4] to-[#3D8CFF] text-white px-3 py-1 rounded-[16px]'>Add Paid</button>
                 </div>
