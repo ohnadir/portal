@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
-import { Form, Input, Modal, Switch, type FormProps } from 'antd';
+import { Form, Input, Modal, notification, Switch, type FormProps } from 'antd';
 import { useAddClientMutation } from "../../redux/apiSlices/clientSlice";
 
 interface IClientModalProps {
@@ -12,17 +13,38 @@ const ClientModal: React.FC<IClientModalProps> = ({ open, setOpen, refetch }) =>
 
     const [addClient] = useAddClientMutation();
     const [form] = Form.useForm();
+    const [api, contextHolder] = notification.useNotification();
 
     const onFinish: FormProps["onFinish"] = async (values) => {
-        await addClient(values).unwrap().then(() => {
-            form.resetFields();
-            setOpen(false)
-            refetch();
-        })
+        await addClient(values)
+            .unwrap()
+            .then(() => {
+                form.resetFields();
+                setOpen(false)
+                refetch();
+            })
+            .catch((error) => {
+                if (error?.errorMessages?.length > 0) {
+                    if (Array.isArray(error.errorMessages)) {
+                        error.errorMessages.forEach((err: any) => {
+                            api.error({
+                                message: 'Error',
+                                description: err?.message || 'Something went wrong.',
+                            });
+                        });
+                    }
+                } else {
+                    api.error({
+                        message: 'Error',
+                        description: error?.message || 'Something went wrong.',
+                    });
+                }
+            });
     };
 
     return (
         <div>
+            {contextHolder}
             <Modal
                 title={<p className='text-[#2375D0] text-[20px]'>Add Client Details</p>}
                 closable={{ 'aria-label': 'Custom Close Button' }}

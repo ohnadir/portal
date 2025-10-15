@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ConfigProvider, DatePicker, Input, Table } from 'antd';
-import { FileText, PencilLine, Search, Trash2 } from 'lucide-react';
+import { PencilLine, Search, Trash2 } from 'lucide-react';
 import moment from 'moment';
 import React, { useState } from 'react';
 import { useDeleteTransactionMutation } from '../../redux/apiSlices/transactionSlice';
 import UpdateTransactionModal from '../modal/UpdateTransactionModal';
 import Swal from 'sweetalert2';
+import ClientTransactionPDFGenerator from '../../util/ClientTransactionPDFGenerator';
 
 
 interface ITransactionProps {
@@ -33,6 +34,7 @@ interface ITransactionTableProps {
     transactions: ITransactionProps[];
     pagination: IPaginationProps;
     refetch: () => void;
+    name: string;
     totalCredit: number;
     totalPaid: number;
     balance: string;
@@ -41,10 +43,22 @@ interface ITransactionTableProps {
     setSearchTerm: (value: string) => void;
 }
 
-const TransactionTable: React.FC<ITransactionTableProps> = ({ transactions, pagination, refetch, setPage, page, totalCredit, totalPaid, balance, setDate, setSearchTerm }) => {
+const TransactionTable: React.FC<ITransactionTableProps> = ({ name, transactions, pagination, refetch, setPage, page, totalCredit, totalPaid, balance, setDate, setSearchTerm }) => {
     const [open, setOpen] = useState<ITransactionProps | null>(null);
     const [deleteTransaction] = useDeleteTransactionMutation();
     const itemsPerPage = 10;
+
+
+    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+    const [selectedValues, setSelectedValues] = useState<ITransactionProps[]>([]);
+
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
+            setSelectedValues(selectedRows);
+            setSelectedRowKeys(selectedRowKeys);
+        }
+    };
 
     const handleDeleteTransaction = async (id: string) => {
         Swal.fire({
@@ -139,6 +153,8 @@ const TransactionTable: React.FC<ITransactionTableProps> = ({ transactions, pagi
         },
     ];
 
+
+
     return (
         <div>
             <div className='flex items-center justify-between mb-3'>
@@ -154,7 +170,11 @@ const TransactionTable: React.FC<ITransactionTableProps> = ({ transactions, pagi
                     </div>
                 </div>
                 <div className='flex items-center justify-end gap-4'>
-                    <FileText size={20} color='blue' />
+                    {selectedRowKeys.length > 0 && (
+                        <div>
+                            <ClientTransactionPDFGenerator data={selectedValues} name={name} />
+                        </div>
+                    )}
                     <Input
                         style={{ width: "335px", paddingLeft: 5, height: 44, borderRadius: 60, background: "white" }}
                         placeholder="Search"
@@ -216,7 +236,8 @@ const TransactionTable: React.FC<ITransactionTableProps> = ({ transactions, pagi
 
             <Table
                 columns={columns}
-                dataSource={transactions}
+                dataSource={transactions?.map((transaction: any) => ({ ...transaction, key: transaction._id }))}
+                rowSelection={rowSelection}
                 pagination={{
                     current: parseInt(page.toString()),
                     onChange: (page) => setPage(page),

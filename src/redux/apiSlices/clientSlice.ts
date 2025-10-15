@@ -10,6 +10,9 @@ const clientSlice = api.injectEndpoints({
                     url: "/client",
                     body: data
                 }
+            },
+            transformErrorResponse: (response: any) => {
+                return response.data;
             }
         }),
         clients: builder.query({

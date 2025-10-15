@@ -8,6 +8,7 @@ import CreditModal from '../modal/CreditModal';
 import PaidModal from '../modal/PaidModal';
 import { Info, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import CreditAndPaidPDFGenerator from '../../util/CreditAndPaidPDFGenerator';
 
 interface ICreditProps {
     _id: string;
@@ -34,12 +35,14 @@ const CreditTable: React.FC<ICreditTableProps> = ({ summaryRefetch }) => {
     const [search, setSearch] = useState<string | undefined>("");
 
     const { data: clients, isLoading, refetch } = useClientsQuery({ page, search, status: clientStatus });
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+    const [selectedValues, setSelectedValues] = useState<ICreditProps[]>([]);
 
     const rowSelection = {
         selectedRowKeys,
-        onChange: (e: any) => {
-            setSelectedRowKeys(e);
+        onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
+            setSelectedValues(selectedRows);
+            setSelectedRowKeys(selectedRowKeys);
         }
     };
 
@@ -126,35 +129,42 @@ const CreditTable: React.FC<ICreditTableProps> = ({ summaryRefetch }) => {
                                         </div>
                                     }
                                 />
-                                <ConfigProvider
-                                    theme={{
-                                        components: {
-                                            Select: {
-                                                colorBgBase: "#F1F1F1",
-                                                colorBgContainer: "#F1F1F1",
-                                                borderRadius: 24,
-                                                activeBorderColor: "none",
-                                                activeOutlineColor: "none",
-                                                hoverBorderColor: "none"
+                                <div className='flex items-center gap-4'>
+                                    {selectedRowKeys.length > 0 && (
+                                        <div>
+                                            <CreditAndPaidPDFGenerator type="Credit" data={selectedValues} />
+                                        </div>
+                                    )}
+                                    <ConfigProvider
+                                        theme={{
+                                            components: {
+                                                Select: {
+                                                    colorBgBase: "#F1F1F1",
+                                                    colorBgContainer: "#F1F1F1",
+                                                    borderRadius: 24,
+                                                    activeBorderColor: "none",
+                                                    activeOutlineColor: "none",
+                                                    hoverBorderColor: "none"
+                                                },
+                                                Pagination: {
+                                                    itemActiveBg: '#2375D0',
+                                                    borderRadius: 100,
+                                                    colorPrimary: 'white',
+                                                },
                                             },
-                                            Pagination: {
-                                                itemActiveBg: '#2375D0',
-                                                borderRadius: 100,
-                                                colorPrimary: 'white',
-                                            },
-                                        },
-                                    }}
-                                >
-                                    <Select 
-                                        onChange={(value) => setClientStatus(value)} 
-                                        placeholder="Active" 
-                                        style={{ width: 130, height: 44, marginBottom: 0 }} 
+                                        }}
                                     >
-                                        <Select.Option value="">View All</Select.Option>
-                                        <Select.Option value="active">Active</Select.Option>
-                                        <Select.Option value="inactive">Inactive</Select.Option>
-                                    </Select>
-                                </ConfigProvider>
+                                        <Select
+                                            onChange={(value) => setClientStatus(value)}
+                                            placeholder="Active"
+                                            style={{ width: 130, height: 44, marginBottom: 0 }}
+                                        >
+                                            <Select.Option value="">View All</Select.Option>
+                                            <Select.Option value="active">Active</Select.Option>
+                                            <Select.Option value="inactive">Inactive</Select.Option>
+                                        </Select>
+                                    </ConfigProvider>
+                                </div>
                             </div>
                             <ConfigProvider
                                 theme={{

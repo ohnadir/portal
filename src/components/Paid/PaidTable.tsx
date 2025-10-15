@@ -5,6 +5,7 @@ import PaidModal from '../modal/PaidModal';
 import CreditModal from '../modal/CreditModal';
 import { Info, Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import CreditAndPaidPDFGenerator from '../../util/CreditAndPaidPDFGenerator';
 
 interface IPaidTableProps {
     summaryRefetch: () => void;
@@ -30,12 +31,14 @@ const PaidTable: React.FC<IPaidTableProps> = ({ summaryRefetch }) => {
     const [search, setSearch] = useState<string | undefined>("");
 
     const { data: clients, refetch } = useClientsQuery({ page, search, status: clientStatus });
-    const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+    const [selectedValues, setSelectedValues] = useState<IClientProps[]>([]);
 
     const rowSelection = {
         selectedRowKeys,
-        onChange: (e: any) => {
-            setSelectedRowKeys(e);
+        onChange: (selectedRowKeys: React.Key[], selectedRows: IClientProps[]) => {
+            setSelectedValues(selectedRows);
+            setSelectedRowKeys(selectedRowKeys);
         }
     };
 
@@ -114,35 +117,42 @@ const PaidTable: React.FC<IPaidTableProps> = ({ summaryRefetch }) => {
                         </div>
                     }
                 />
-                <ConfigProvider
-                    theme={{
-                        components: {
-                            Select: {
-                                colorBgBase: "#F1F1F1",
-                                colorBgContainer: "#F1F1F1",
-                                borderRadius: 24,
-                                activeBorderColor: "none",
-                                activeOutlineColor: "none",
-                                hoverBorderColor: "none"
+                <div className='flex items-center gap-4'>
+                    {selectedRowKeys.length > 0 && (
+                        <div>
+                            <CreditAndPaidPDFGenerator type="Paid" data={selectedValues} />
+                        </div>
+                    )}
+                    <ConfigProvider
+                        theme={{
+                            components: {
+                                Select: {
+                                    colorBgBase: "#F1F1F1",
+                                    colorBgContainer: "#F1F1F1",
+                                    borderRadius: 24,
+                                    activeBorderColor: "none",
+                                    activeOutlineColor: "none",
+                                    hoverBorderColor: "none"
+                                },
+                                Pagination: {
+                                    itemActiveBg: '#2375D0',
+                                    borderRadius: 100,
+                                    colorPrimary: 'white',
+                                },
                             },
-                            Pagination: {
-                                itemActiveBg: '#2375D0',
-                                borderRadius: 100,
-                                colorPrimary: 'white',
-                            },
-                        },
-                    }}
-                >
-                    <Select
-                        onChange={(value) => setClientStatus(value)}
-                        placeholder="Active"
-                        style={{ width: 130, height: 44, marginBottom: 0 }}
+                        }}
                     >
-                        <Select.Option value="">View All</Select.Option>
-                        <Select.Option value="active">Active</Select.Option>
-                        <Select.Option value="inactive">Inactive</Select.Option>
-                    </Select>
-                </ConfigProvider>
+                        <Select
+                            onChange={(value) => setClientStatus(value)}
+                            placeholder="Active"
+                            style={{ width: 130, height: 44, marginBottom: 0 }}
+                        >
+                            <Select.Option value="">View All</Select.Option>
+                            <Select.Option value="active">Active</Select.Option>
+                            <Select.Option value="inactive">Inactive</Select.Option>
+                        </Select>
+                    </ConfigProvider>
+                </div>
             </div>
 
             <ConfigProvider
@@ -158,7 +168,7 @@ const PaidTable: React.FC<IPaidTableProps> = ({ summaryRefetch }) => {
             >
                 <Table
                     columns={columns}
-                    dataSource={clients?.map((client: any) => ({ ...client, key: client._id }))}
+                    dataSource={clients?.map((client: IClientProps) => ({ ...client, key: client._id }))}
                     rowSelection={rowSelection}
                     pagination={{
                         current: parseInt(Number(page).toString()),

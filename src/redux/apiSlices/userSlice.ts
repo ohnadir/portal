@@ -10,7 +10,10 @@ const userSlice = api.injectEndpoints({
                     url: "/auth/login",
                     body: data
                 }
-            }
+            },
+            transformErrorResponse: (response: any) => {
+                return response.data;
+            },
         }),
         updatePassword: builder.mutation({
             query: (data) => {

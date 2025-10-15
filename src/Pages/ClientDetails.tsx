@@ -116,6 +116,7 @@ const ClientDetails: React.FC = () => {
                                 <TransactionTable
                                     balance={clientDetails?.balance}
                                     setDate={setDate}
+                                    name={clientDetails?.name}
                                     date={date}
                                     setSearchTerm={setSearchTerm}
                                     setPage={setPage}
