@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
-import { Form, Input, Modal, notification, Switch, type FormProps } from 'antd';
-import { useAddClientMutation } from "../../redux/apiSlices/clientSlice";
+import { Form, Input, Modal, notification, type FormProps } from 'antd';
+import { useAddClientMutation, useCheckUsernameMutation } from "../../redux/apiSlices/clientSlice";
 
 interface IClientModalProps {
     open: boolean;
@@ -12,10 +13,12 @@ interface IClientModalProps {
 const ClientModal: React.FC<IClientModalProps> = ({ open, setOpen, refetch }) => {
 
     const [addClient] = useAddClientMutation();
+    const [checkUsername] = useCheckUsernameMutation();
     const [form] = Form.useForm();
     const [api, contextHolder] = notification.useNotification();
 
     const onFinish: FormProps["onFinish"] = async (values) => {
+        console.log(values);
         await addClient(values)
             .unwrap()
             .then(() => {
@@ -57,12 +60,12 @@ const ClientModal: React.FC<IClientModalProps> = ({ open, setOpen, refetch }) =>
                     <Form.Item
                         className="col-span-6"
                         style={{ marginBottom: 0 }}
-                        label="Username"
+                        label="Full name"
                         name="name"
                         rules={[{ required: true, message: "Please input your username!" }]}
                     >
                         <Input
-                            placeholder='Enter username'
+                            placeholder='Enter Full Name'
                             style={{ borderRadius: 90, height: 44, border: "1px solid #E0E0E0" }}
                         />
                     </Form.Item>
@@ -72,15 +75,41 @@ const ClientModal: React.FC<IClientModalProps> = ({ open, setOpen, refetch }) =>
                         style={{ marginBottom: 0 }}
                         label="Email"
                         name="email"
-                        rules={[{ required: true, message: "Please input your email!" }]}
                     >
                         <Input placeholder='Enter email' style={{ borderRadius: 90, height: 44, border: "1px solid #E0E0E0" }} />
                     </Form.Item>
+                    <Form.Item 
+                        className="col-span-12"
+                        style={{ marginBottom: 0 }} 
+                        label="Username" 
+                        name="username"
+                        rules={[
+                            { required: true, message: "Please input your username!" },
+                            {
+                                validator: async (_, value) => {
+                                    if (value && value.trim() !== '') {
+                                        try {
+                                            const result = await checkUsername({ username: value }).unwrap();  // Call the mutation
+                                            if (result.exists) {  // Assuming the response has a 'exists' property
+                                                return Promise.reject(new Error('Username already exists'));
+                                            }
+                                            return Promise.resolve();  // Username is available
+                                        } catch (error:any) {
+                                            return Promise.reject(new Error('Username already exists'));
+                                        }
+                                    }
+                                    return Promise.resolve();  // No value, so no error
+                                },
+                            }
+                        ]}
+                    >
+                        <Input placeholder='Enter username' style={{ borderRadius: 90, height: 44, border: "1px solid #E0E0E0" }} />
+                    </Form.Item>
 
-                    <Form.Item className="col-span-6" style={{ marginBottom: 0 }} label="Address" name="address" rules={[{ required: true, message: "Please input your address!" }]}>
+                    <Form.Item className="col-span-6" style={{ marginBottom: 0 }} label="Address" name="address">
                         <Input placeholder='Enter Address' style={{ borderRadius: 90, height: 44, border: "1px solid #E0E0E0" }} />
                     </Form.Item>
-                    <Form.Item className="col-span-6" style={{ marginBottom: 0 }} label="Contact No." name="contact" rules={[{ required: true, message: "Please input your contact!" }]}>
+                    <Form.Item className="col-span-6" style={{ marginBottom: 0 }} label="Contact No." name="contact">
                         <Input placeholder='Enter Contact No.' style={{ borderRadius: 90, height: 44, border: "1px solid #E0E0E0" }} />
                     </Form.Item>
 
@@ -119,24 +148,6 @@ const ClientModal: React.FC<IClientModalProps> = ({ open, setOpen, refetch }) =>
                     >
                         <Input.Password placeholder='Enter Client confirm password' style={{ borderRadius: 90, height: 44, border: "1px solid #E0E0E0" }} />
                     </Form.Item>
-
-                    <div className="col-span-12 h-[1px] bg-[#E0E0E0] my-2"></div>
-
-                    <div className="col-span-12 flex items-center gap-2">
-                        <Form.Item
-                            name="status"
-                            valuePropName="checked"
-                            noStyle
-                        >
-                            <Switch defaultChecked />
-                        </Form.Item>
-
-                        <p className="text-[#7F7F7F]">
-                            <span className="font-bold text-black">Active</span> (kindly confirm your client activity)
-                        </p>
-                    </div>
-
-
 
                     <div className="col-span-12 flex justify-center">
                         <button

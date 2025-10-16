@@ -12,9 +12,11 @@ const ClientDetails: React.FC = () => {
     const { id } = useParams();
     const [open, setOpen] = useState<object | null>(null);
     const [page, setPage] = useState(1);
-    const [date, setDate] = useState<string | undefined>(undefined);
+    const [limit, setLimit] = useState(10);
+    const [fromDate, setFromDate] = useState<string | undefined>(undefined);
+    const [toDate, setToDate] = useState<string | undefined>(undefined);
     const [searchTerm, setSearchTerm] = useState<string | undefined>("");
-    const { data: clientDetails, isLoading, refetch } = useClientDetailsQuery({ id: id!, page, date: date, search: searchTerm });
+    const { data: clientDetails, isLoading, refetch } = useClientDetailsQuery({ id: id!, page, fromDate, toDate, limit, search: searchTerm });
     const [status] = useStatusMutation();
 
     const onChange = async () => {
@@ -115,12 +117,14 @@ const ClientDetails: React.FC = () => {
                             <div className="bg-white rounded-[16px] p-6" style={{ boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.16)" }}>
                                 <TransactionTable
                                     balance={clientDetails?.balance}
-                                    setDate={setDate}
+                                    setFromDate={setFromDate}
+                                    setToDate={setToDate}
                                     name={clientDetails?.name}
-                                    date={date}
                                     setSearchTerm={setSearchTerm}
                                     setPage={setPage}
                                     page={page}
+                                    setLimit={setLimit}
+                                    limit={limit}
                                     refetch={refetch}
                                     pagination={clientDetails?.pagination}
                                     transactions={clientDetails?.transactions}

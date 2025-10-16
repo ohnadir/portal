@@ -29,7 +29,7 @@ const Clients: React.FC = () => {
     const [page, setPage] = useState(1);
     const [open, setOpen] = useState(false);
     const [status] = useStatusMutation();
-    const [clientStatus, setClientStatus] = useState<"active" | "inactive" | undefined>("active");
+    const [clientStatus, setClientStatus] = useState<"active" | "inactive">();
     const [search, setSearch] = useState<string | undefined>("");
     const [limit, setLimit] = useState(10);
     const { data: clients, isLoading, refetch } = useClientsQuery({ page, search, status: clientStatus, limit });
@@ -146,8 +146,8 @@ const Clients: React.FC = () => {
                                     theme={{
                                         components: {
                                             Select: {
-                                                colorBgBase: "#F1F1F1",
-                                                colorBgContainer: "#F1F1F1",
+                                                colorBgBase: "white",
+                                                colorBgContainer: "white",
                                                 borderRadius: 24,
                                                 activeBorderColor: "none",
                                                 activeOutlineColor: "none",
@@ -163,7 +163,7 @@ const Clients: React.FC = () => {
                                 >
                                     <Select
                                         onChange={(value) => setClientStatus(value)}
-                                        placeholder="Active"
+                                        placeholder="View All"
                                         style={{ width: 130, height: 44, marginBottom: 0 }}
                                     >
                                         <Select.Option value="">View All</Select.Option>

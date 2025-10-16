@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect } from 'react';
 import { Form, Input, Modal, Switch, type FormProps } from 'antd';
 import { useUpdateClientMutation } from "../../redux/apiSlices/clientSlice";
@@ -14,7 +15,7 @@ const ClientUpdateModal: React.FC<IClientUpdateModalProps> = ({ open, setOpen, r
     const [form] = Form.useForm();
 
     const onFinish: FormProps["onFinish"] = async (values) => {
-        await updateClient({id: (open as any)?._id, body:values}).unwrap().then(() => {
+        await updateClient({ id: (open as any)?._id, body: values }).unwrap().then(() => {
             form.resetFields();
             setOpen(null)
             refetch()
@@ -40,12 +41,11 @@ const ClientUpdateModal: React.FC<IClientUpdateModalProps> = ({ open, setOpen, r
                     <Form.Item
                         className="col-span-6"
                         style={{ marginBottom: 0 }}
-                        label="Username"
+                        label="Full Name"
                         name="name"
-                        rules={[{ required: true, message: "Please input your username!" }]}
                     >
                         <Input
-                            placeholder='Enter username'
+                            placeholder='Enter Full Name'
                             style={{ borderRadius: 90, height: 44, border: "1px solid #E0E0E0" }}
                         />
                     </Form.Item>
@@ -55,15 +55,23 @@ const ClientUpdateModal: React.FC<IClientUpdateModalProps> = ({ open, setOpen, r
                         style={{ marginBottom: 0 }}
                         label="Email"
                         name="email"
-                        rules={[{ required: true, message: "Please input your email!" }]}
                     >
                         <Input placeholder='Enter email' style={{ borderRadius: 90, height: 44, border: "1px solid #E0E0E0" }} />
                     </Form.Item>
+                    <Form.Item
+                        className="col-span-12"
+                        style={{ marginBottom: 0 }}
+                        label="Username"
+                        name="username"
+            
+                    >
+                        <Input disabled placeholder='Enter username' style={{ borderRadius: 90, height: 44, border: "1px solid #E0E0E0" }} />
+                    </Form.Item>
 
-                    <Form.Item className="col-span-6" style={{ marginBottom: 0 }} label="Address" name="address" rules={[{ required: true, message: "Please input your address!" }]}>
+                    <Form.Item className="col-span-6" style={{ marginBottom: 0 }} label="Address" name="address">
                         <Input placeholder='Enter Address' style={{ borderRadius: 90, height: 44, border: "1px solid #E0E0E0" }} />
                     </Form.Item>
-                    <Form.Item className="col-span-6" style={{ marginBottom: 0 }} label="Contact No." name="contact" rules={[{ required: true, message: "Please input your contact!" }]}>
+                    <Form.Item className="col-span-6" style={{ marginBottom: 0 }} label="Contact No." name="contact">
                         <Input placeholder='Enter Contact No.' style={{ borderRadius: 90, height: 44, border: "1px solid #E0E0E0" }} />
                     </Form.Item>
 

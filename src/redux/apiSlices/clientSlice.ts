@@ -15,6 +15,15 @@ const clientSlice = api.injectEndpoints({
                 return response.data;
             }
         }),
+        checkUsername: builder.mutation({
+            query: (data) => {
+                return {
+                    method: "PUT",
+                    url: "/user",
+                    body: data
+                }
+            }
+        }),
         clients: builder.query({
             query: ({page, search, status, limit}: {page?: number, search?: string, status?: "active" | "inactive", limit?: number}) => {
                 const params = new URLSearchParams()
@@ -43,11 +52,13 @@ const clientSlice = api.injectEndpoints({
             }
         }),
         clientDetails: builder.query({
-            query: ({id, page, date, search}: {id: string, page: number, date?: string, search?: string}) => {
+            query: ({id, page, fromDate, toDate, search, limit}: {id: string, page: number, limit:number, fromDate?:string, toDate?:string, search?: string}) => {
                 const params = new URLSearchParams()
-                if (page) params.append("page", page.toString())
-                if (search) params.append("searchTerm", search)
-                if (date) params.append("date", date)
+                if (page) params.append("page", page.toString());
+                if (search) params.append("searchTerm", search);
+                if (fromDate) params.append("fromDate", fromDate);
+                if (toDate) params.append("toDate", toDate);
+                if (limit) params.append("limit", limit.toString());
                 return {
                     method: "GET",
                     url: `/transaction/${id}?${params.toString()}`
@@ -108,5 +119,6 @@ export const {
     useClientDetailsQuery,
     useClientStatisticQuery,
     useActiveClientsQuery,
-    useUpdateClientMutation
+    useUpdateClientMutation,
+    useCheckUsernameMutation
 } = clientSlice;

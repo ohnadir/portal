@@ -27,12 +27,13 @@ interface ITransactionProps {
 const Transaction: React.FC = () => {
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
-    const [date, setDate] = useState<string | undefined>(undefined);
+    const [fromDate, setFromDate] = useState<string | undefined>(undefined);
+    const [toDate, setToDate] = useState<string | undefined>(undefined);
     const [open, setOpen] = useState<ITransactionProps | undefined>(undefined);
     const [deleteTransaction] = useDeleteTransactionMutation();
     const [client, setClient] = useState<string | undefined>(undefined);
     const [type, setType] = useState<string | undefined>(undefined);
-    const { data: transactions, isLoading, refetch } = useTransactionsQuery({ page, type, date, client, limit });
+    const { data: transactions, isLoading, refetch } = useTransactionsQuery({ page, type, fromDate, toDate, client, limit });
     const { data: clients } = useClientsQuery({});
     const itemsPerPage = 10;
 
@@ -259,7 +260,7 @@ const Transaction: React.FC = () => {
                                                 borderRadius: 60,
                                                 background: "white",
                                             }}
-                                            onChange={(_date, dateString) => setDate(dateString.toString())}
+                                            onChange={(_date, dateString) => setFromDate(dateString.toString())}
                                         />
                                     </ConfigProvider>
 
@@ -278,7 +279,7 @@ const Transaction: React.FC = () => {
                                                 borderRadius: 60,
                                                 background: "white",
                                             }}
-                                            onChange={(_date, dateString) => setDate(dateString.toString())}
+                                            onChange={(_date, dateString) => setToDate(dateString.toString())}
                                         />
                                     </ConfigProvider>
                                 </div>
@@ -297,10 +298,14 @@ const Transaction: React.FC = () => {
                                         setPage(page);
                                         setLimit(limit);
                                     },
+                                    showTotal: (total, range) => (
+                                        <div className='absolute w-fit z-10 bottom-0 left-0 right-0'>
+                                            Showing {range[0]}–{range[1]} out of {total}
+                                        </div>
+                                    ),
                                 }}
 
                                 bordered
-                                className="shadow-md"
                             />
                             <UpdateTransactionModal open={open} setOpen={setOpen} refetch={refetch} />
                         </div>

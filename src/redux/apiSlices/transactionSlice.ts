@@ -4,12 +4,13 @@ import { api } from "../api/baseApi";
 const transactionSlice = api.injectEndpoints({
     endpoints: (builder) => ({
         transactions: builder.query({
-            query: ({page, search, client, date, type, limit}: {page?: number, search?: string, client?: string, date?: string, type?: string, limit?: number}) => {
+            query: ({page, search, client, fromDate, toDate, type, limit}: {page?: number, search?: string,fromDate?:string, toDate?:string, client?: string, type?: string, limit?: number}) => {
                 const params = new URLSearchParams()
                 if (page) params.append("page", page.toString())
                 if (search) params.append("searchTerm", search)
                 if (client) params.append("client", client)
-                if (date) params.append("date", date)
+                if (fromDate) params.append("fromDate", fromDate);
+                if (toDate) params.append("toDate", toDate)
                 if (type) params.append("type", type)
                 if (limit) params.append("limit", limit.toString())
                 return {

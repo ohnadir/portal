@@ -30,7 +30,9 @@ interface IPaginationProps {
 
 interface ITransactionTableProps {
     setPage: (page: number) => void;
+    setLimit: (limit: number) => void;
     page: number;
+    limit: number;
     transactions: ITransactionProps[];
     pagination: IPaginationProps;
     refetch: () => void;
@@ -38,12 +40,12 @@ interface ITransactionTableProps {
     totalCredit: number;
     totalPaid: number;
     balance: string;
-    date: string | undefined;
-    setDate: (value: string) => void;
+    setToDate: (value: string) => void;
+    setFromDate: (value: string) => void;
     setSearchTerm: (value: string) => void;
 }
 
-const TransactionTable: React.FC<ITransactionTableProps> = ({ name, transactions, pagination, refetch, setPage, page, totalCredit, totalPaid, balance, setDate, setSearchTerm }) => {
+const TransactionTable: React.FC<ITransactionTableProps> = ({ name, transactions, setToDate, setFromDate, pagination, refetch, setPage, limit, setLimit, page, totalCredit, totalPaid, balance, setSearchTerm }) => {
     const [open, setOpen] = useState<ITransactionProps | null>(null);
     const [deleteTransaction] = useDeleteTransactionMutation();
     const itemsPerPage = 10;
@@ -210,7 +212,7 @@ const TransactionTable: React.FC<ITransactionTableProps> = ({ name, transactions
                                 borderRadius: 60,
                                 background: "white",
                             }}
-                            onChange={(_date, dateString) => setDate(dateString.toString())}
+                            onChange={(_date, dateString) => setFromDate(dateString.toString())}
                         />
                     </ConfigProvider>
                     <ConfigProvider
@@ -228,7 +230,7 @@ const TransactionTable: React.FC<ITransactionTableProps> = ({ name, transactions
                                 borderRadius: 60,
                                 background: "white",
                             }}
-                            onChange={(_date, dateString) => setDate(dateString.toString())}
+                            onChange={(_date, dateString) => setToDate(dateString.toString())}
                         />
                     </ConfigProvider>
                 </div>
@@ -240,11 +242,21 @@ const TransactionTable: React.FC<ITransactionTableProps> = ({ name, transactions
                 rowSelection={rowSelection}
                 pagination={{
                     current: parseInt(page.toString()),
-                    onChange: (page) => setPage(page),
-                    total: pagination?.total
+                    pageSize: limit,
+                    showSizeChanger: true,
+                    total: pagination?.total,
+                    onChange: (page, limit) => {
+                        setPage(page);
+                        setLimit(limit);
+                    },
+                    showTotal: (total, range) => (
+                        <div className='absolute w-fit z-10 bottom-0 left-0 right-0'>
+                            Showing {range[0]}–{range[1]} out of {total}
+                        </div>
+                    ),
+
                 }}
                 bordered
-                className="shadow-md"
             />
             <UpdateTransactionModal open={open} setOpen={setOpen} refetch={refetch} />
         </div>
