@@ -72,7 +72,6 @@ const Transaction: React.FC = () => {
 
             }
         });
-
     };
 
     const columns = [
