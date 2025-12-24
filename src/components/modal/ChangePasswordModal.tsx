@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Form, Input, Modal, type FormProps } from 'antd';
+import { Form, Input, Modal, notification, type FormProps } from 'antd';
 import React from 'react';
-import { useAddCreditMutation } from '../../redux/apiSlices/transactionSlice';
+import { useUpdateClientPasswordMutation } from '../../redux/apiSlices/clientSlice';
 
 interface IChangePasswordModalProps {
     open: any | null;
@@ -9,20 +9,37 @@ interface IChangePasswordModalProps {
 }
 
 const ChangePasswordModal: React.FC<IChangePasswordModalProps> = ({ open, setOpen }) => {
-
+    const [api, contextHolder] = notification.useNotification();
     const [form] = Form.useForm();
-    const [addCredit] = useAddCreditMutation();
+    const [updateClientPassword] = useUpdateClientPasswordMutation();
 
     const onFinish: FormProps["onFinish"] = async (values) => {
-        await addCredit({ id: open?._id, body: values }).unwrap().then(() => {
+        await updateClientPassword({ id: open, body: values }).unwrap().then(() => {
             form.resetFields();
             setOpen(null)
-        })
+        }).catch((error) => {
+            if (error?.errorMessages?.length > 0) {
+                if (Array.isArray(error.errorMessages)) {
+                    error.errorMessages.forEach((err: any) => {
+                        api.error({
+                            message: 'Error',
+                            description: err?.message || 'Something went wrong.',
+                        });
+                    });
+                }
+            } else {
+                api.error({
+                    message: 'Error',
+                    description: error?.message || 'Something went wrong.',
+                });
+            }
+        });
     };
 
 
     return (
         <div>
+            {contextHolder}
             <Modal
                 title={<p className='text-[#080808] text-[20px] mb-3'>Change Client Password</p>}
                 open={open}
@@ -31,16 +48,46 @@ const ChangePasswordModal: React.FC<IChangePasswordModalProps> = ({ open, setOpe
                 footer={false}
             >
                 <Form form={form} layout='vertical' className='grid grid-cols-1 gap-3 w-[100%]' onFinish={onFinish}>
-                    <Form.Item label={<p className='text-[#636363] leading-[24px]'>Current Password</p>} style={{ marginBottom: 0 }} name="currentPassword">
-                        <Input type="password" style={{ border: "1px solid #E0E0E0", height: 48 }} />
+                    <Form.Item
+                        label={<p className='text-[#636363] leading-[24px]'>Current Password</p>}
+                        style={{ marginBottom: 0 }}
+                        name="currentPassword"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please input your Current Password!",
+                            }
+                        ]}
+                    >
+                        <Input.Password type="password" style={{ border: "1px solid #E0E0E0", height: 48 }} />
                     </Form.Item>
 
-                    <Form.Item label={<p className='text-[#636363] leading-[24px]'>New Password</p>} style={{ marginBottom: 0 }} name="newPassword">
-                        <Input type="password" style={{ border: "1px solid #E0E0E0", height: 48 }} />
+                    <Form.Item
+                        label={<p className='text-[#636363] leading-[24px]'>New Password</p>}
+                        style={{ marginBottom: 0 }}
+                        name="newPassword"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please input your New Password!",
+                            }
+                        ]}
+                    >
+                        <Input.Password type="password" style={{ border: "1px solid #E0E0E0", height: 48 }} />
                     </Form.Item>
 
-                    <Form.Item label={<p className='text-[#636363] leading-[24px]'>Confirm Password</p>} style={{ marginBottom: 0 }} name="confirmPassword">
-                        <Input type="password" style={{ border: "1px solid #E0E0E0", height: 48 }} />
+                    <Form.Item
+                        label={<p className='text-[#636363] leading-[24px]'>Confirm Password</p>}
+                        style={{ marginBottom: 0 }}
+                        name="confirmPassword"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please input your Confirm Password!",
+                            }
+                        ]}
+                    >
+                        <Input.Password type="password" style={{ border: "1px solid #E0E0E0", height: 48 }} />
                     </Form.Item>
 
                     <button

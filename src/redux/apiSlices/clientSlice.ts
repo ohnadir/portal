@@ -87,6 +87,24 @@ const clientSlice = api.injectEndpoints({
                 }
             }
         }),
+        deleteClient: builder.mutation({
+            query: (id) => {
+                return {
+                    method: "DELETE",
+                    url: `/client/${id}`
+                }
+            }
+        }),
+        updateClientPassword: builder.mutation({
+            query: ({id, body}: {id: string, body:any}) => {
+                
+                return {
+                    method: "POST",
+                    url: `/client/${id}`,
+                    body
+                }
+            }
+        }),
         updateClient: builder.mutation({
             query: ({id, body}: {id: string, body:any}) => {
                 
@@ -108,6 +126,35 @@ const clientSlice = api.injectEndpoints({
                 return response.data;
             }
         }),
+        clientLogin: builder.mutation({
+            query: (data) => {
+                return{
+                    method: "POST",
+                    url: "/client/login",
+                    body: data
+                }
+            },
+            transformErrorResponse: (response: any) => {
+                return response.data;
+            },
+        }),
+        clienTransactions: builder.query({
+            query: ({id, page, fromDate, toDate, searchTerm, limit}: {id: string, page: number, limit:number, fromDate?:string, toDate?:string, searchTerm?: string}) => {
+                const params = new URLSearchParams()
+                if (page) params.append("page", page.toString());
+                if (searchTerm) params.append("searchTerm", searchTerm);
+                if (fromDate) params.append("fromDate", fromDate);
+                if (toDate) params.append("toDate", toDate);
+                if (limit) params.append("limit", limit.toString());
+                return {
+                    method: "GET",
+                    url: `/transaction/${id}?${params.toString()}`
+                }
+            },
+            transformResponse(baseQueryReturnValue) {
+                return baseQueryReturnValue?.data;
+            }
+        }),
     })
 })
 
@@ -120,5 +167,9 @@ export const {
     useClientStatisticQuery,
     useActiveClientsQuery,
     useUpdateClientMutation,
-    useCheckUsernameMutation
+    useCheckUsernameMutation,
+    useDeleteClientMutation,
+    useUpdateClientPasswordMutation,
+    useClientLoginMutation,
+    useClienTransactionsQuery
 } = clientSlice;

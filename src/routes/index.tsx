@@ -9,41 +9,52 @@ import ClientDetails from "../Pages/ClientDetails";
 import Login from "../Pages/Auth/Login";
 import PrivateRoute from "./PrivateRoutes";
 import Transaction from "../Pages/Transactions";
+import ClientLogin from "../Pages/Auth/ClientLogin";
+import LoginClientTransactions from "../Pages/Main/LoginClientTransactions";
 
 const router = createBrowserRouter([
+    
+    {
+        path: "/client-login",
+        element: <ClientLogin />
+    },
+    {
+        path: "/client-transations/:clientId",
+        element: <LoginClientTransactions />
+    },
     {
         path: "/",
-        element: <PrivateRoute> <Main/> </PrivateRoute>,
+        element: <PrivateRoute> <Main /> </PrivateRoute>,
         children: [
             {
                 path: "/",
-                element: <Home/>
+                element: <Home />
             },
             {
                 path: "/client",
-                element: <Clients/>
+                element: <Clients />
             },
             {
                 path: "/add-credit",
-                element: <Credits/>
+                element: <Credits />
             },
             {
                 path: "/payment-paid",
-                element: <Paid/>
+                element: <Paid />
             },
             {
                 path: "/transactions",
-                element: <Transaction/>
+                element: <Transaction />
             },
             {
                 path: "/account-settings",
-                element: <Profile/>
+                element: <Profile />
             },
             {
                 path: "/client-details/:id",
-                element: <ClientDetails/>
+                element: <ClientDetails />
             },
-            
+
         ]
     },
     {
@@ -51,15 +62,15 @@ const router = createBrowserRouter([
         element: <Login />,
         children: [
             {
-                path: "/auth",
-                element: <Login />,
-            },
-            {
                 path: "login",
                 element: <Login />,
             },
+            {
+                path: "client-login",
+                element: <ClientLogin />,
+            },
         ]
-    },
+    }
 ]);
 
 export default router;

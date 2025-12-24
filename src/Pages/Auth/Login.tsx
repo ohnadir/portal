@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Form, Input, notification, type FormProps } from "antd";
 import Logo from "../../assets/logo.png";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../redux/apiSlices/userSlice";
 
 const Login = () => {
@@ -40,7 +40,7 @@ const Login = () => {
             {contextHolder}
             <div className="p-10 rounded-[12px] bg-white w-[630px]">
                 <img src={Logo} alt="" className="w-[140px] h-[50px] mx-auto mb-5" />
-                <h1 className="text-[32px] text-black text-center font-medium"> Login in to Account</h1>
+                <h1 className="text-[32px] text-black text-center font-medium"> Login to Account</h1>
                 <Form layout="vertical" className="grid grid-cols-1 gap-4" onFinish={onFinish}>
 
                     <Form.Item
@@ -89,6 +89,8 @@ const Login = () => {
                             }}
                         />
                     </Form.Item>
+
+                    <Link className="block text-right" to="/client-login">Client Login</Link>
                     <Form.Item style={{ marginBottom: 0 }}>
                         <Button
                             type="primary"

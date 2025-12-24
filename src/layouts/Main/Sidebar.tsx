@@ -98,7 +98,7 @@ const Sidebar: React.FC<ISidebarProps> = ({ setNavigationName }) => {
                 className="flex text-[#415D71] items-center gap-3 cursor-pointer px-6 hover:bg-gray-200 py-2 mx-2 rounded-lg transition-all"
             >
                 <LogOut size={24} color="#415D71" />
-                Logout
+                Log
             </div>
         </div>
     );

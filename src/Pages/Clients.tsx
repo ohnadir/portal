@@ -4,7 +4,7 @@ import { ConfigProvider, Input, Select, Switch, Table, type TableColumnsType } f
 import { Info, KeyRound, Lock, LockOpen, Plus, Search, Trash2 } from 'lucide-react';
 import React, { useState } from 'react';
 import Logo from "../assets/logo.png";
-import { useClientsQuery, useStatusMutation } from '../redux/apiSlices/clientSlice';
+import { useClientsQuery, useDeleteClientMutation, useStatusMutation } from '../redux/apiSlices/clientSlice';
 import ClientModal from '../components/Clients/ClientModal';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
@@ -35,9 +35,10 @@ const Clients: React.FC = () => {
     const [search, setSearch] = useState<string | undefined>("");
     const [limit, setLimit] = useState(10);
     const { data: clients, isLoading, refetch } = useClientsQuery({ page, search, status: clientStatus, limit });
-    const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+    const [passwordModalOpen, setPasswordModalOpen] = useState<string | null>(null);
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     const [selectedValues, setSelectedValues] = useState<IClientProps[]>([]);
+    const [deleteClient] = useDeleteClientMutation();
 
     const rowSelection = {
         selectedRowKeys,
@@ -53,7 +54,8 @@ const Clients: React.FC = () => {
         })
     };
 
-    const handleDeleteTransaction = async (id: string) => {
+    const handleDeleteClient = async (id: string) => {
+        console.log("Delete client with ID:", id);
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this again!",
@@ -64,13 +66,17 @@ const Clients: React.FC = () => {
             confirmButtonText: "Yes"
         }).then(async (result: any) => {
             if (result.isConfirmed) {
-                Swal.fire({
-                    title: "Deleted!",
-                    text: "Your transaction has been deleted.",
-                    icon: "success",
-                    showConfirmButton: false,
-                    timer: 1500
-                });
+                await deleteClient(id).unwrap().then(() => {
+                    refetch();
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "Your client has been deleted.",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                })
+
             }
         });
     };
@@ -90,6 +96,11 @@ const Clients: React.FC = () => {
                 <img width={35} height={35} src={_record.profile} alt="" />
                 <p>{_record.name}</p>
             </div>
+        },
+        {
+            title: 'username',
+            dataIndex: 'username',
+            key: 'username',
         },
         {
             title: 'Email',
@@ -121,8 +132,8 @@ const Clients: React.FC = () => {
                     <Link to={`/client-details/${_record._id}`}>
                         <Info size={24} color='#606060' />
                     </Link>
-                    <Trash2 className='cursor-pointer' onClick={() => handleDeleteTransaction(_record._id)} color='red' size={20} />
-                    <KeyRound className='cursor-pointer' onClick={() => setPasswordModalOpen(true)} size={20} />
+                    <Trash2 className='cursor-pointer' onClick={() => handleDeleteClient(_record._id)} color='red' size={20} />
+                    <KeyRound className='cursor-pointer' onClick={() => setPasswordModalOpen(_record._id)} size={20} />
                     <Switch onChange={() => onChange(_record._id)} value={_record.status === "active" ? true : false} className='custom-switch' />
                 </div>
         },
