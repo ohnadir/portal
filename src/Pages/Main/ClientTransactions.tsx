@@ -2,9 +2,9 @@
 import { ConfigProvider, DatePicker, Select, Table } from 'antd';
 import moment from 'moment';
 import React, { useState } from 'react';
-import { useTransactionsQuery } from '../redux/apiSlices/transactionSlice';
 import Logo from "../assets/logo.png";
 import PdfGenerator from '../../util/PdfGenerator';
+import { useTransactionsQuery } from '../../redux/apiSlices/transactionSlice';
 
 interface ITransactionProps {
     _id: string;

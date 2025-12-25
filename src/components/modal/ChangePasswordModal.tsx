@@ -49,20 +49,6 @@ const ChangePasswordModal: React.FC<IChangePasswordModalProps> = ({ open, setOpe
             >
                 <Form form={form} layout='vertical' className='grid grid-cols-1 gap-3 w-[100%]' onFinish={onFinish}>
                     <Form.Item
-                        label={<p className='text-[#636363] leading-[24px]'>Current Password</p>}
-                        style={{ marginBottom: 0 }}
-                        name="currentPassword"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please input your Current Password!",
-                            }
-                        ]}
-                    >
-                        <Input.Password type="password" style={{ border: "1px solid #E0E0E0", height: 48 }} />
-                    </Form.Item>
-
-                    <Form.Item
                         label={<p className='text-[#636363] leading-[24px]'>New Password</p>}
                         style={{ marginBottom: 0 }}
                         name="newPassword"
