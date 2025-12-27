@@ -22,6 +22,7 @@ interface IClientProps {
     credit: string;
     balance: string;
     createdAt: string;
+    username: string;
     userId: string;
     profile: string;
     status: "active" | "inactive"
@@ -94,13 +95,8 @@ const Clients: React.FC = () => {
             key: 'client',
             render: (_: string, _record: IClientProps, _index: number) => <div className='flex items-center gap-2'>
                 <img width={35} height={35} src={_record.profile} alt="" />
-                <p>{_record.name}</p>
+                <p>{_record?.username}</p>
             </div>
-        },
-        {
-            title: 'username',
-            dataIndex: 'username',
-            key: 'username',
         },
         {
             title: 'Email',
@@ -236,18 +232,19 @@ const Clients: React.FC = () => {
                             >
                                 <Table<IClientProps>
                                     columns={columns}
-                                    dataSource={clients?.map((client: any) => ({ ...client, key: client._id }))}
+                                    dataSource={clients?.data?.map((client: any) => ({ ...client, key: client._id }))}
                                     rowSelection={rowSelection}
                                     pagination={{
                                         current: parseInt(Number(page).toString()),
                                         pageSize: limit,
+                                        total: clients?.pagination?.total,
                                         showSizeChanger: true,
                                         onChange: (page, limit) => {
                                             setPage(page);
                                             setLimit(limit);
                                         },
                                         showTotal: (total, range) => (
-                                            <div className='absolute bottom-0 left-0 right-0'>
+                                            <div className='absolute w-fit bottom-0 left-0 right-0'>
                                                 Showing {range[0]}–{range[1]} out of {total}
                                             </div>
                                         ),

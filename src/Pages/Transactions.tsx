@@ -238,7 +238,7 @@ const Transaction: React.FC = () => {
                                         <Select onChange={(value) => setClient(value)} placeholder="Client " style={{ width: 160, height: 44, marginBottom: 0 }} >
                                             <Select.Option value="">View All</Select.Option>
                                             {
-                                                clients?.map((client: any) => (
+                                                clients?.data?.map((client: any) => (
                                                     <Select.Option value={client._id}>{client.name}</Select.Option>
                                                 ))
                                             }

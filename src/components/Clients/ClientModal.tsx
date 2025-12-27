@@ -76,7 +76,7 @@ const ClientModal: React.FC<IClientModalProps> = ({ open, setOpen, refetch }) =>
                         label="Email"
                         name="email"
                     >
-                        <Input placeholder='Enter email' style={{ borderRadius: 90, height: 44, border: "1px solid #E0E0E0" }} />
+                        <Input type='email' placeholder='Enter email' style={{ borderRadius: 90, height: 44, border: "1px solid #E0E0E0" }} />
                     </Form.Item>
                     <Form.Item 
                         className="col-span-12"

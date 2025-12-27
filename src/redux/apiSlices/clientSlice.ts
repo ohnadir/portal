@@ -36,9 +36,6 @@ const clientSlice = api.injectEndpoints({
                     url: `/client?${params.toString()}`,
                 }
             },
-            transformResponse: (response: any) => {
-                return response.data;
-            }
         }),
         activeClients: builder.query({
             query: () => {

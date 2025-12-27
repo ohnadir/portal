@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ConfigProvider, Input, Select, Table, type TableColumnsType } from 'antd'
 import React, { useState } from 'react'
 import { useClientsQuery } from '../../redux/apiSlices/clientSlice';
@@ -15,6 +17,7 @@ interface IClientProps {
     _id: string;
     key: string;
     name: string;
+    username: string;
     totalCredit: number;
     totalPaid: number;
     createdAt: string;
@@ -55,7 +58,7 @@ const PaidTable: React.FC<IPaidTableProps> = ({ summaryRefetch }) => {
             key: 'client',
             render: (_: string, _record: IClientProps) => <div className='flex items-center gap-2'>
                 <img width={35} height={35} src={_record.profile} alt="" />
-                <p>{_record.name}</p>
+                <p>{_record.username}</p>
             </div>
         },
         {
@@ -168,11 +171,21 @@ const PaidTable: React.FC<IPaidTableProps> = ({ summaryRefetch }) => {
             >
                 <Table
                     columns={columns}
-                    dataSource={clients?.map((client: IClientProps) => ({ ...client, key: client._id }))}
+                    dataSource={clients?.data?.map((client: any) => ({ ...client, key: client._id }))}
                     rowSelection={rowSelection}
                     pagination={{
                         current: parseInt(Number(page).toString()),
-                        onChange: (page) => setPage(page),
+                        pageSize: clients?.pagination?.limit,
+                        total: clients?.pagination?.total,
+                        showSizeChanger: true,
+                        onChange: (page, limit) => {
+                            setPage(page);
+                        },
+                        showTotal: (total, range) => (
+                            <div className='absolute w-fit bottom-0 left-0 right-0'>
+                                Showing {range[0]}–{range[1]} out of {total}
+                            </div>
+                        ),
                     }}
                 />
             </ConfigProvider>
