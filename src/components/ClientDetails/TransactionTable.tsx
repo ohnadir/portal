@@ -19,6 +19,7 @@ interface ITransactionProps {
     notes?: string;
     type: "credit" | "paid";
     amount: number;
+    totalBalance: string;
 }
 
 interface IPaginationProps {
@@ -137,10 +138,10 @@ const TransactionTable: React.FC<ITransactionTableProps> = ({ name, transactions
         },
         {
             title: "Balance",
-            dataIndex: "balance",
-            key: "balance",
+            dataIndex: "totalBalance",
+            key: "totalBalance",
             render: (_: string, value: ITransactionProps) => (
-                <span className="text-blue-500">{value?.balance}</span>
+                <span className="text-blue-500">{value?.totalBalance}</span>
             ),
         },
         {

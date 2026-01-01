@@ -10,6 +10,7 @@ interface ITransactionProps {
     createdAt: string;
     notes?: string;
     balance: string;
+    totalBalance: string;
     type: "credit" | "paid";
     amount: number;
 }
@@ -29,12 +30,12 @@ const ClientTransactionPDFGenerator = ({ data, name }: { data: ITransactionProps
             item.type.toLocaleUpperCase(),
             item.type === "credit" ? item.amount : 0,
             item.type === "paid" ? item.amount : 0,
-            parseFloat(item.balance) || 0
+            parseFloat(item.totalBalance.toString()) || 0
         ]);
 
         const totalCredit = tableData.reduce((sum, row) => sum + (row[4] as number), 0);
         const totalPaid = tableData.reduce((sum, row) => sum + (row[5] as number), 0);
-        const totalBalance = tableData.reduce((sum, row) => sum + (row[6] as number), 0);
+        const totalBalance = totalCredit - totalPaid;
 
         autoTable(doc, {
             startY: 30,

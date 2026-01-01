@@ -14,6 +14,7 @@ interface ITransactionProps {
     createdAt: string;
     paid: string;
     balance: string;
+    totalBalance: string;
     credit: string;
     notes?: string;
     type: "credit" | "paid";
@@ -87,10 +88,10 @@ const LoginClientTransactions = () => {
         },
         {
             title: "Balance",
-            dataIndex: "balance",
-            key: "balance",
+            dataIndex: "totalBalance",
+            key: "totalBalance",
             render: (_: string, value: ITransactionProps) => (
-                <span className="text-blue-500">{value?.balance}</span>
+                <span className="text-blue-500">{value?.totalBalance}</span>
             ),
         }
     ];
