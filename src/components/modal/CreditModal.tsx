@@ -2,6 +2,7 @@
 import { Form, Input, Modal, type FormProps } from 'antd';
 import React from 'react';
 import { useAddCreditMutation } from '../../redux/apiSlices/transactionSlice';
+import Spinner from '../Common/Spinner';
 
 interface ICreditModalProps {
     open: any | null;
@@ -13,7 +14,7 @@ interface ICreditModalProps {
 const CreditModal: React.FC<ICreditModalProps> = ({ open, setOpen, refetch, summaryRefetch }) => {
 
     const [form] = Form.useForm();
-    const [addCredit] = useAddCreditMutation();
+    const [addCredit, { isLoading }] = useAddCreditMutation();
 
     const onFinish: FormProps["onFinish"] = async (values) => {
         await addCredit({id: open?._id, body: values}).unwrap().then(() => {
@@ -59,7 +60,7 @@ const CreditModal: React.FC<ICreditModalProps> = ({ open, setOpen, refetch, summ
                         className="text-white cursor-pointer col-span-12 font-medium flex items-center justify-center gap-2 bg-gradient-to-r from-[#0058D4] to-[#3D8CFF] h-11 rounded-[90px]"
                         style={{ boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.16)", width: "100%" }}
                     >
-                        Confirm
+                        {isLoading ? <Spinner/> : 'Confirm'}
                     </button>
                 </Form>
             </Modal>

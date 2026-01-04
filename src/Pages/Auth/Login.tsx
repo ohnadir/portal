@@ -3,9 +3,10 @@ import { Button, Form, Input, notification, type FormProps } from "antd";
 import Logo from "../../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../redux/apiSlices/userSlice";
+import Spinner from "../../components/Common/Spinner";
 
 const Login = () => {
-    const [login] = useLoginMutation();
+    const [login, { isLoading }] = useLoginMutation();
     const navigate = useNavigate()
     const [api, contextHolder] = notification.useNotification();
 
@@ -103,7 +104,8 @@ const Login = () => {
                                 background: "#00809E",
                             }}
                         >
-                            Sign In
+                            {isLoading ? <Spinner/> : 'Login'}
+                            
                         </Button>
                     </Form.Item>
                 </Form>

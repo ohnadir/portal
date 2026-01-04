@@ -2,6 +2,7 @@
 import { Form, Input, Modal, notification, type FormProps } from 'antd';
 import React from 'react';
 import { useUpdateClientPasswordMutation } from '../../redux/apiSlices/clientSlice';
+import Spinner from '../Common/Spinner';
 
 interface IChangePasswordModalProps {
     open: any | null;
@@ -11,7 +12,7 @@ interface IChangePasswordModalProps {
 const ChangePasswordModal: React.FC<IChangePasswordModalProps> = ({ open, setOpen }) => {
     const [api, contextHolder] = notification.useNotification();
     const [form] = Form.useForm();
-    const [updateClientPassword] = useUpdateClientPasswordMutation();
+    const [updateClientPassword, { isLoading }] = useUpdateClientPasswordMutation();
 
     const onFinish: FormProps["onFinish"] = async (values) => {
         await updateClientPassword({ id: open, body: values }).unwrap().then(() => {
@@ -80,7 +81,7 @@ const ChangePasswordModal: React.FC<IChangePasswordModalProps> = ({ open, setOpe
                         className="text-white font-medium  flex items-center justify-center gap-2 bg-gradient-to-r from-[#0058D4] to-[#3D8CFF] h-11 rounded-[90px]"
                         style={{ boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.16)" }}
                     >
-                        Confirm
+                        { isLoading ? <Spinner/> : 'Confirm' }
                     </button>
                 </Form>
             </Modal>

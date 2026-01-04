@@ -2,6 +2,7 @@
 import { Form, Input, Modal, type FormProps } from 'antd';
 import React from 'react';
 import { useAddDebitMutation } from '../../redux/apiSlices/transactionSlice';
+import Spinner from '../Common/Spinner';
 
 interface IPaidModalProps {
     open: any | null;
@@ -12,7 +13,7 @@ interface IPaidModalProps {
 
 const PaidModal: React.FC<IPaidModalProps> = ({ open, setOpen, refetch, summaryRefetch }) => {
     const [form] = Form.useForm();
-    const [addDebit] = useAddDebitMutation();
+    const [addDebit, { isLoading }] = useAddDebitMutation();
 
     const onFinish: FormProps["onFinish"] = async (values) => {
         await addDebit({id: open?._id, body: values}).unwrap().then(() => {
@@ -58,7 +59,7 @@ const PaidModal: React.FC<IPaidModalProps> = ({ open, setOpen, refetch, summaryR
                         className="text-white cursor-pointer col-span-12 font-medium flex items-center justify-center gap-2 bg-gradient-to-r from-[#0058D4] to-[#3D8CFF] h-11 rounded-[90px]"
                         style={{ boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.16)", width: "100%" }}
                     >
-                        Confirm
+                        {isLoading ? <Spinner/> : 'Confirm'}
                     </button>
                 </Form>
             </Modal>
