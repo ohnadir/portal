@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ConfigProvider, DatePicker, Select, Table } from 'antd';
+import { ConfigProvider, DatePicker, Select, Table, type TableColumnsType } from 'antd';
 import { PencilLine, Trash2 } from 'lucide-react';
 import moment from 'moment';
 import React, { useState } from 'react';
@@ -74,7 +74,7 @@ const Transaction: React.FC = () => {
         });
     };
 
-    const columns = [
+    const columns: TableColumnsType<ITransactionProps> = [
         {
             title: "S.No",
             dataIndex: "sno",
