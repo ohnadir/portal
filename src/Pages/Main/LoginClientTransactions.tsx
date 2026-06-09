@@ -173,10 +173,12 @@ const LoginClientTransactions = () => {
                     pageSize: limit,
                     showSizeChanger: true,
                     total: transactions?.pagination?.total,
+                    pageSizeOptions: ['20', '50', '70', '100', '200'],
                     onChange: (page, limit) => {
                         setPage(page);
                         setLimit(limit);
                     },
+                    
                     showTotal: (total, range) => (
                         <div className='absolute w-fit z-10 bottom-0 left-0 right-0'>
                             Showing {range[0]}–{range[1]} out of {total}

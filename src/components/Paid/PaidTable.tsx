@@ -178,6 +178,7 @@ const PaidTable: React.FC<IPaidTableProps> = ({ summaryRefetch }) => {
                         pageSize: clients?.pagination?.limit,
                         total: clients?.pagination?.total,
                         showSizeChanger: true,
+                        pageSizeOptions: ['20', '50', '70', '100', '200'],
                         onChange: (page, _limit) => {
                             setPage(page);
                         },

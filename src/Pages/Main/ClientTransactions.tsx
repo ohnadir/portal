@@ -219,6 +219,7 @@ const ClientTransactions: React.FC = () => {
                                     pageSize: limit,
                                     total: transactions?.pagination?.total,
                                     showSizeChanger: true,
+                                    pageSizeOptions: ['20', '50', '70', '100', '200'],
                                     onChange: (page, limit) => {
                                         setPage(page);
                                         setLimit(limit);

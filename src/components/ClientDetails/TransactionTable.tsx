@@ -245,6 +245,7 @@ const TransactionTable: React.FC<ITransactionTableProps> = ({ name, transactions
                     current: parseInt(page.toString()),
                     pageSize: limit,
                     showSizeChanger: true,
+                    pageSizeOptions: ['20', '50', '70', '100', '200'],
                     total: pagination?.total,
                     onChange: (page, limit) => {
                         setPage(page);

@@ -135,6 +135,8 @@ const Transaction: React.FC = () => {
             render: (_: string, value: ITransactionProps) => (
                 <span className="text-blue-500">{value?.balance}</span>
             ),
+            sorter: (a: ITransactionProps, b: ITransactionProps) => Number(a.balance) - Number(b.balance),
+            sortDirections: ['ascend', 'descend'],
         },
         {
             title: 'Actions',
@@ -293,6 +295,7 @@ const Transaction: React.FC = () => {
                                     pageSize: limit,
                                     total: transactions?.pagination?.total,
                                     showSizeChanger: true,
+                                    pageSizeOptions: ['20', '50', '70', '100', '200'],
                                     onChange: (page, limit) => {
                                         setPage(page);
                                         setLimit(limit);

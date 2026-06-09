@@ -34,7 +34,7 @@ const Clients: React.FC = () => {
     const [status] = useStatusMutation();
     const [clientStatus, setClientStatus] = useState<"active" | "inactive">("active");
     const [search, setSearch] = useState<string | undefined>("");
-    const [limit, setLimit] = useState(10);
+    const [limit, setLimit] = useState(20);
     const { data: clients, isLoading, refetch } = useClientsQuery({ page, search, status: clientStatus, limit });
     const [passwordModalOpen, setPasswordModalOpen] = useState<string | null>(null);
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -118,6 +118,8 @@ const Clients: React.FC = () => {
             title: 'Balance',
             dataIndex: 'balance',
             key: 'balance',
+            sorter: (a: IClientProps, b: IClientProps) => Number(a.balance) - Number(b.balance),
+            sortDirections: ['ascend', 'descend'],
         },
         {
             title: 'Actions',
@@ -239,6 +241,7 @@ const Clients: React.FC = () => {
                                         pageSize: limit,
                                         total: clients?.pagination?.total,
                                         showSizeChanger: true,
+                                        pageSizeOptions: ['20', '50', '70', '100', '200'],
                                         onChange: (page, limit) => {
                                             setPage(page);
                                             setLimit(limit);

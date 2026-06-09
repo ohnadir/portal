@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Form, Input, Modal, type FormProps } from 'antd';
+import { Form, Input, Modal, Table, type FormProps, type TableColumnsType } from 'antd';
 import React from 'react';
 import { useAddDebitMutation } from '../../redux/apiSlices/transactionSlice';
 import Spinner from '../Common/Spinner';
+import { useClientDetailsQuery } from '../../redux/apiSlices/clientSlice';
+import moment from 'moment';
 
 interface IPaidModalProps {
     open: any | null;
@@ -11,12 +13,23 @@ interface IPaidModalProps {
     summaryRefetch: () => void;
 }
 
+
+interface ICreditProps {
+    _id: string;
+    key: string;
+    amount: number;
+    createdAt: string;
+    type: string;
+    status: "active" | "inactive"
+}
+
 const PaidModal: React.FC<IPaidModalProps> = ({ open, setOpen, refetch, summaryRefetch }) => {
     const [form] = Form.useForm();
     const [addDebit, { isLoading }] = useAddDebitMutation();
+    const { data: clientDetails } = useClientDetailsQuery({ id: open?._id, type: "paid", page: 1, limit: 10 });
 
     const onFinish: FormProps["onFinish"] = async (values) => {
-        await addDebit({id: open?._id, body: values}).unwrap().then(() => {
+        await addDebit({ id: open?._id, body: values }).unwrap().then(() => {
             form.resetFields();
             setOpen(null);
             refetch();
@@ -24,17 +37,38 @@ const PaidModal: React.FC<IPaidModalProps> = ({ open, setOpen, refetch, summaryR
         })
     };
 
+    const columns: TableColumnsType<ICreditProps> = [
+        {
+            title: 'Amount',
+            dataIndex: 'amount',
+            key: 'amount',
+            render: (_: string, _record: ICreditProps) => <p>{_record.amount}</p>,
+        },
+        {
+            title: 'Date',
+            dataIndex: 'createdAt',
+            key: 'createdAt',
+            render: (_: string, _record: ICreditProps) => <p>{moment(_record?.createdAt).format("l")}</p>,
+        },
+        {
+            title: 'Type',
+            dataIndex: 'type',
+            key: 'type',
+            render: (_: string, _record: ICreditProps) => <p>{_record.type}</p>,
+        },
+    ];
+
 
     return (
         <div>
             <Modal
                 title={<p className='text-[#080808] text-[20px] mb-3'>Add Paid</p>}
                 open={open}
-                width={320}
+                width={420}
                 onCancel={() => setOpen(null)}
                 footer={false}
             >
-                <Form onFinish={onFinish} form={form} style={{ marginTop: 20 }} layout="vertical" className="grid grid-cols-12 gap-4">
+                <Form onFinish={onFinish} form={form} style={{ marginTop: 20, marginBottom: 15 }} layout="vertical" className="grid grid-cols-12 gap-4">
                     <Form.Item
                         className="col-span-12"
                         style={{ marginBottom: 0 }}
@@ -59,9 +93,15 @@ const PaidModal: React.FC<IPaidModalProps> = ({ open, setOpen, refetch, summaryR
                         className="text-white cursor-pointer col-span-12 font-medium flex items-center justify-center gap-2 bg-gradient-to-r from-[#0058D4] to-[#3D8CFF] h-11 rounded-[90px]"
                         style={{ boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.16)", width: "100%" }}
                     >
-                        {isLoading ? <Spinner/> : 'Confirm'}
+                        {isLoading ? <Spinner /> : 'Confirm'}
                     </button>
                 </Form>
+
+                <Table<ICreditProps>
+                    columns={columns}
+                    pagination={false}
+                    dataSource={clientDetails?.transactions?.slice(0, 5)?.map((transactions: any) => ({ ...transactions, key: transactions._id })) || []}
+                />
             </Modal>
         </div>
     );

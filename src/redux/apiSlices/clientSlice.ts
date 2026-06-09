@@ -49,13 +49,14 @@ const clientSlice = api.injectEndpoints({
             }
         }),
         clientDetails: builder.query({
-            query: ({id, page, fromDate, toDate, search, limit}: {id: string, page: number, limit:number, fromDate?:string, toDate?:string, search?: string}) => {
+            query: ({id, page, fromDate, toDate, search, limit, type}: {id: string, page: number, limit:number, fromDate?:string, toDate?:string, search?: string, type?: string}) => {
                 const params = new URLSearchParams()
                 if (page) params.append("page", page.toString());
                 if (search) params.append("searchTerm", search);
                 if (fromDate) params.append("fromDate", fromDate);
                 if (toDate) params.append("toDate", toDate);
                 if (limit) params.append("limit", limit.toString());
+                if(type) params.append("type", type);
                 return {
                     method: "GET",
                     url: `/transaction/${id}?${params.toString()}`
